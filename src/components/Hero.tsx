@@ -320,7 +320,7 @@ export default function Hero() {
 
       {/* Content — container-arcane (90% width, centered) */}
       <div className="container-arcane relative z-10" style={{ paddingTop: '80px', paddingBottom: '40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(2rem, 4vw, 6rem)', alignItems: 'center', minHeight: '82vh' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(2rem, 4vw, 6rem)', alignItems: 'center', minHeight: '82vh' }}>
 
           {/* LEFT — text */}
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative' }}>
@@ -428,10 +428,11 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT — sigil + constellation portrait */}
+          {/* RIGHT — sigil + constellation portrait (hidden on mobile) */}
           <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'min(520px, 50vw)' }}>
+            className="hidden md:flex"
+            style={{ position: 'relative', alignItems: 'center', justifyContent: 'center', height: 'min(520px, 50vw)' }}>
             <ConstellationPortrait />
             <SigilDecoration />
           </motion.div>

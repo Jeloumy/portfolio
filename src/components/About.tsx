@@ -129,7 +129,7 @@ export default function About() {
         </motion.div>
 
         {/* ── Two-column section ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(3rem, 5vw, 8rem)', alignItems: 'start' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(2rem, 5vw, 8rem)', alignItems: 'start' }}>
 
           {/* Left — extended bio + tags */}
           <motion.div
@@ -176,7 +176,7 @@ export default function About() {
           </motion.div>
 
           {/* Right — trait cards */}
-          <div ref={cardsRef} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(0.75rem, 1.5vw, 1.25rem)' }}>
+          <div ref={cardsRef} className="grid grid-cols-2" style={{ gap: 'clamp(0.75rem, 1.5vw, 1.25rem)' }}>
             {TRAITS.map((trait, i) => (
               <motion.div
                 key={trait.title}
