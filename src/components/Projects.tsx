@@ -287,7 +287,7 @@ export default function Projects() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: '-80px' }}
+          viewport={{ once: true, margin: '-80px' }}
           transition={{ type: 'spring', stiffness: 300, damping: 22 }}
           className="text-center"
           style={{ marginBottom: 'clamp(3.5rem, 6vw, 7rem)' }}
@@ -315,7 +315,7 @@ export default function Projects() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center"
         >

@@ -215,10 +215,10 @@ export default function Skills() {
 
         {/* Mobile — branches par section */}
         <motion.div
-          className="md:hidden"
+          className="md:hidden flex flex-col"
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}
+          style={{ gap: '2.5rem' }}
         >
           {BRANCHES.map(branch => {
             const branchSkills = SKILLS.filter(s => s.branch === BRANCHES.indexOf(branch))

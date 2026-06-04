@@ -398,11 +398,8 @@ export default function Creative() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35 }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${currentConfig.columns}, 1fr)`,
-            gap: 'clamp(1rem, 2vw, 1.75rem)',
-          }}
+          className={`grid grid-cols-1 sm:grid-cols-2 ${currentConfig.columns === 4 ? 'lg:grid-cols-4' : 'md:grid-cols-3'}`}
+          style={{ gap: 'clamp(1rem, 2vw, 1.75rem)' }}
         >
           {items.map((item, i) => (
             <CreativeCard
