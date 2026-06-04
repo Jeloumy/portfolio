@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { getScrollDir } from '../hooks/useScrollDirection'
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ExternalLink, ChevronRight, Info } from 'lucide-react'

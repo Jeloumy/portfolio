@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { getScrollDir } from '../hooks/useScrollDirection'
 import { Mail, Send, MapPin, CheckCircle2, ArrowRight } from 'lucide-react'

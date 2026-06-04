@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react'
-import { motion, useInView, type Variants } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { getScrollDir } from '../hooks/useScrollDirection'
 import { Play, type LucideIcon } from 'lucide-react'
 import {
@@ -137,15 +137,6 @@ const ITEMS: Record<CreativeTab, CreativeItem[]> = {
   designs: DESIGN_ITEMS,
 }
 
-// ── Animation variants ────────────────────────────────────────────────────────
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (delay: number) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] },
-  }),
-}
 
 // ── CreativeCard ──────────────────────────────────────────────────────────────
 
