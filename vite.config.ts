@@ -2,13 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// En local base = '/', sur GitHub Actions base = '/nom-du-repo/'
-const base = process.env.GITHUB_REPOSITORY
-  ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
-  : '/'
-
 export default defineConfig({
-  base,
+  base: process.env.VITE_BASE ?? '/',
   plugins: [
     react(),
     tailwindcss(),
