@@ -772,8 +772,9 @@ export default function Journey() {
           </p>
         </motion.div>
 
-        {/* SVG Fantasy Map */}
+        {/* SVG Fantasy Map — masquée sur mobile */}
         <motion.div
+          className="hidden md:block"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.6 }}
@@ -782,8 +783,8 @@ export default function Journey() {
           <JourneyMap inView={inView} mapProgress={mapProgress} />
         </motion.div>
 
-        {/* Milestone cards — BUT MMI reçoit ses stages, les autres non */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'clamp(1rem, 2vw, 2rem)' }}>
+        {/* Milestone cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'clamp(1.5rem, 2vw, 2rem)' }}>
           {MILESTONES.map((ms, i) => (
             <MilestoneCard
               key={ms.id}

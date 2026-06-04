@@ -201,7 +201,7 @@ export default function Skills() {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 22, delay: 0.2 }}
-          className="flex items-center justify-center gap-8 mb-10 flex-wrap"
+          className="hidden md:flex items-center justify-center gap-8 mb-10 flex-wrap"
         >
           {BRANCHES.map(b => (
             <div key={b.id} className="flex items-center gap-2">
@@ -218,26 +218,26 @@ export default function Skills() {
           className="md:hidden"
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}
         >
           {BRANCHES.map(branch => {
             const branchSkills = SKILLS.filter(s => s.branch === BRANCHES.indexOf(branch))
             return (
-              <div key={branch.id} style={{ borderLeft: `2px solid ${branch.color}44`, paddingLeft: '1.25rem' }}>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-3 h-3 rounded-full" style={{ background: branch.color, boxShadow: `0 0 8px ${branch.color}` }} />
-                  <span className="font-['Cinzel'] tracking-widest uppercase" style={{ fontSize: '0.7rem', color: branch.color }}>
+              <div key={branch.id} style={{ borderLeft: `2px solid ${branch.color}55`, paddingLeft: '1.5rem' }}>
+                <div className="flex items-center gap-2.5" style={{ marginBottom: '1.25rem' }}>
+                  <div className="w-3.5 h-3.5 rounded-full" style={{ background: branch.color, boxShadow: `0 0 10px ${branch.color}` }} />
+                  <span className="font-['Cinzel'] tracking-widest uppercase" style={{ fontSize: '0.8rem', color: branch.color }}>
                     {branch.label}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap" style={{ gap: '0.6rem' }}>
                   {branchSkills.map(skill => (
                     <span key={skill.label}
-                      className="font-['JetBrains_Mono',monospace]"
                       style={{
-                        fontSize: '0.72rem', padding: '0.3rem 0.75rem', borderRadius: '4px',
-                        background: branch.color + '12', border: `1px solid ${branch.color}33`,
-                        color: skill.level >= 70 ? branch.color + 'dd' : branch.color + '66',
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '0.8rem', padding: '0.4rem 0.9rem', borderRadius: '6px',
+                        background: branch.color + '14', border: `1px solid ${branch.color}44`,
+                        color: skill.level >= 70 ? branch.color + 'ee' : branch.color + '77',
                       }}>
                       {skill.label}
                     </span>
