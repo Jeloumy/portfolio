@@ -307,7 +307,7 @@ export default function Projects() {
         </motion.div>
 
         {/* 2×2 grid of framed paintings */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(1.5rem, 3vw, 3rem)', marginBottom: 'clamp(2rem, 4vw, 4rem)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 'clamp(1.5rem, 3vw, 3rem)', marginBottom: 'clamp(2rem, 4vw, 4rem)' }}>
           {PROJECTS.map((p, i) => <ProjectCard key={p.id} project={p} index={i} />)}
         </div>
 

@@ -219,10 +219,11 @@ export default function Skills() {
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 22 }}
         >
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <svg
             viewBox="0 0 1300 600"
             preserveAspectRatio="xMidYMid meet"
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: '100%', minWidth: '600px', height: 'auto' }}
           >
             <defs>
               <filter id="skillGlow">
@@ -285,6 +286,7 @@ export default function Skills() {
               />
             ))}
           </svg>
+          </div>
         </motion.div>
       </div>
     </section>

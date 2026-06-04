@@ -137,7 +137,7 @@ export default function Contact() {
         </motion.div>
 
         {/* ── Main content grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 'clamp(2.5rem, 5vw, 6rem)', alignItems: 'start' }}>
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr]" style={{ gap: 'clamp(2rem, 5vw, 6rem)', alignItems: 'start' }}>
 
           {/* ── Left panel ── */}
           <motion.div
