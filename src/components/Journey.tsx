@@ -431,40 +431,44 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
   )
 }
 
-// ── Mobile vertical journey path (interactive) ───────────────────────────────
-// Chemin centré, alternance gauche/droite, textes lisibles
-function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
-  inView: boolean; selectedIndex: number; onSelect: (i: number) => void
+// ── Mobile vertical journey path — full visual treatment ─────────────────────
+function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
+  inView: boolean; mapProgress: MotionValue<number>;
+  selectedIndex: number; onSelect: (i: number) => void
 }) {
   const pathRef = useRef<SVGPathElement>(null)
   const [pathLen, setPathLen] = useState(0)
-  // Path centré sur x=200 dans un viewBox 400×580
-  const MOBILE_PATH_D = 'M 200 80 C 178 168 222 210 200 290 C 178 372 222 412 200 500'
+  const MOBILE_PATH_D = 'M 200 130 C 172 285 228 395 200 510 C 172 625 228 735 200 860'
 
   useEffect(() => {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength())
   }, [])
 
-  // Alternance : 0=gauche, 1=droite, 2=gauche
+  // Scroll-driven strokeDashoffset — identique au desktop
+  const strokeDashoffset = useTransform(mapProgress, (p) =>
+    pathLen > 0 ? pathLen * (1 - Math.max(0, Math.min(1, p))) : pathLen
+  )
+
   const SIDES: ('left' | 'right')[] = ['left', 'right', 'left']
   const CX = 200
-  const GAP = 32 // distance entre le diamant et le début du texte
+  const GAP = 40
 
   const mobileDots: [number, number, string][] = [
-    [197, 122, '#a78bfa'], [203, 155, '#a78bfa'], [196, 188, '#a78bfa'],
-    [204, 218, '#c9a54e'], [197, 338, '#c9a54e'], [203, 365, '#c9a54e'],
-    [196, 428, '#f43f5e'], [204, 458, '#f43f5e'],
+    [195, 195, '#a78bfa'], [205, 245, '#a78bfa'], [194, 300, '#a78bfa'],
+    [206, 355, '#a78bfa'], [195, 415, '#c9a54e'], [205, 460, '#c9a54e'],
+    [195, 565, '#c9a54e'], [205, 615, '#c9a54e'], [194, 665, '#c9a54e'],
+    [206, 720, '#f43f5e'], [195, 775, '#f43f5e'], [205, 820, '#f43f5e'],
   ]
 
   const mobileMs = [
-    { ...MILESTONES[0], cx: CX, cy: 80 },
-    { ...MILESTONES[1], cx: CX, cy: 290 },
-    { ...MILESTONES[2], cx: CX, cy: 500 },
+    { ...MILESTONES[0], cx: CX, cy: 130 },
+    { ...MILESTONES[1], cx: CX, cy: 510 },
+    { ...MILESTONES[2], cx: CX, cy: 860 },
   ]
 
   return (
     <svg
-      viewBox="0 0 400 580"
+      viewBox="0 0 400 960"
       preserveAspectRatio="xMidYMid meet"
       style={{ width: '100%', height: 'auto', overflow: 'visible', display: 'block' }}
     >
@@ -475,90 +479,177 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
           <stop offset="100%" stopColor="#f43f5e" />
         </linearGradient>
         <filter id="mobileNodeGlow">
-          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="mobileSoftGlow">
+          <feGaussianBlur stdDeviation="2" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
-      {/* Constellation dots le long du chemin */}
+      {/* Grille de points de fond */}
+      {[...Array(11)].map((_, row) =>
+        [...Array(5)].map((__, col) => (
+          <circle key={`${row}-${col}`} cx={col * 90 + 20} cy={row * 90 + 20} r="1" fill="#c9a54e" opacity="0.04" />
+        ))
+      )}
+
+      {/* Montagnes — même style que desktop */}
+      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
+        <MountainRange color="#a78bfa"
+          points="10,220 42,178 68,196 102,152 136,186 165,165 192,220"
+          opacity={0.2} inView={inView} delay={0.3} />
+      </motion.g>
+      <motion.g animate={{ y: [0, -4, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}>
+        <MountainRange color="#c9a54e"
+          points="218,420 250,375 278,395 312,348 345,382 375,362 398,420"
+          opacity={0.16} inView={inView} delay={0.5} />
+      </motion.g>
+      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}>
+        <MountainRange color="#c9a54e"
+          points="10,630 44,585 74,605 110,558 144,592 172,572 198,630"
+          opacity={0.17} inView={inView} delay={0.7} />
+      </motion.g>
+      <motion.g animate={{ y: [0, -5, 0] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}>
+        <MountainRange color="#f43f5e"
+          points="220,800 252,754 282,774 315,726 348,762 378,744 398,800"
+          opacity={0.14} inView={inView} delay={0.9} />
+      </motion.g>
+
+      {/* Arbres */}
+      <Trees color="#a78bfa" positions={[[14, 118], [28, 126], [6, 133]]} />
+      <Trees color="#c9a54e" positions={[[358, 532], [372, 540], [350, 547]]} />
+      <Trees color="#f43f5e" positions={[[14, 875], [28, 883]]} />
+
+      {/* Bâtiments — mêmes composants que desktop */}
+      {inView && (
+        <>
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1.6 }}>
+            <TowerBuilding x={328} y={258} color="#a78bfa" />
+          </motion.g>
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 1.6 }}>
+            <TourEiffel   x={68}  y={588} color="#c9a54e" />
+            <ArcDeTriomphe x={136} y={588} color="#c9a54e" />
+          </motion.g>
+          <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.8, duration: 1.6 }}>
+            <CompassTown x={348} y={860} color="#f43f5e" />
+          </motion.g>
+        </>
+      )}
+
+      {/* Marqueurs de stage — même style que desktop */}
+      {[
+        { cx: 195, cy: 348, year: '2023', label: 'La Valrassienne', color: '#c9a54e', side: 'left'  as const },
+        { cx: 205, cy: 456, year: '2024', label: 'Pass Piscines',   color: '#34d399', side: 'right' as const },
+      ].map((s) => {
+        const lineEndX = s.side === 'left' ? s.cx - 40 : s.cx + 40
+        const textX    = s.side === 'left' ? s.cx - 46 : s.cx + 46
+        const anchor   = s.side === 'left' ? 'end' : 'start'
+        return (
+          <motion.g key={s.year}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 0.35, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <line x1={s.cx} y1={s.cy} x2={lineEndX} y2={s.cy}
+              stroke={s.color} strokeWidth="1.2" strokeDasharray="3 3" opacity="0.55" />
+            <text x={textX} y={s.cy - 8} textAnchor={anchor}
+              fill={s.color} fontSize="13" fontFamily="Cinzel" letterSpacing="1" opacity="0.85">
+              {s.year}
+            </text>
+            <text x={textX} y={s.cy + 8} textAnchor={anchor}
+              fill={s.color} fontSize="11" fontFamily="Cinzel" opacity="0.6">
+              {s.label}
+            </text>
+            <rect x={s.cx - 7} y={s.cy - 7} width="14" height="14"
+              transform={`rotate(45, ${s.cx}, ${s.cy})`}
+              fill={s.color + '18'} stroke={s.color} strokeWidth="1.2"
+              filter="url(#mobileSoftGlow)" />
+            <circle cx={s.cx} cy={s.cy} r="3.5" fill={s.color} opacity="0.85" />
+          </motion.g>
+        )
+      })}
+
+      {/* Points de constellation le long du chemin */}
       {mobileDots.map(([px, py, fill], i) => (
-        <motion.circle key={i} cx={px} cy={py} r="3"
+        <motion.circle key={i} cx={px} cy={py} r="5"
           fill={fill}
           initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 0.55, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 0.25, delay: 0.05 * i + 0.5 }}
+          animate={inView ? { opacity: 0.5, scale: 1 } : { opacity: 0, scale: 0 }}
+          transition={{ duration: 0.25, delay: 0.04 * i + 0.4 }}
         />
       ))}
 
-      {/* Chemin de référence (pour getTotalLength) */}
+      {/* Chemin de référence (mesure de longueur) */}
       <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
 
-      {/* Chemin gradient animé — plus épais */}
+      {/* Chemin scroll-driven — se dessine/efface avec le scroll */}
       {pathLen > 0 && (
         <motion.path
           d={MOBILE_PATH_D}
           stroke="url(#mobileJourneyGrad)"
-          strokeWidth="5"
+          strokeWidth="10"
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
-          initial={{ strokeDashoffset: pathLen, opacity: 0 }}
-          animate={inView ? { strokeDashoffset: 0, opacity: 1 } : { strokeDashoffset: pathLen, opacity: 0 }}
-          transition={{ duration: 1.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
-          style={{ filter: 'drop-shadow(0 0 7px rgba(201,165,78,0.6))' }}
+          style={{
+            strokeDashoffset,
+            filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))',
+          }}
         />
       )}
 
       {/* Nœuds cliquables */}
       {mobileMs.map((ms, i) => {
         const active = selectedIndex === i
-        const side = SIDES[i]
+        const side   = SIDES[i]
         const labelX = side === 'left' ? ms.cx - GAP : ms.cx + GAP
         const anchor = side === 'left' ? 'end' : 'start'
-        // Zone de tap : toute la moitié du SVG côté label
-        const hitX = side === 'left' ? 0 : ms.cx - GAP
-        const hitW = side === 'left' ? ms.cx + GAP : 400 - (ms.cx - GAP)
+        const hitX   = side === 'left' ? 0 : ms.cx - GAP
+        const hitW   = side === 'left' ? ms.cx + GAP : 400 - (ms.cx - GAP)
+
+        // Titre sur 2 lignes si > 12 chars
+        const words = ms.title.split(' ')
+        const cut   = words.findIndex((_, idx) => words.slice(0, idx + 1).join(' ').length > 12)
+        const t1    = cut > 0 ? words.slice(0, cut).join(' ') : ms.title
+        const t2    = cut > 0 ? words.slice(cut).join(' ')    : ''
 
         return (
           <g key={ms.id} onClick={() => onSelect(i)} style={{ cursor: 'pointer' }}>
-            {/* Zone de tap large pour mobile */}
-            <rect x={hitX} y={ms.cy - 40} width={hitW} height={80} fill="transparent" />
+            {/* Zone de tap pleine largeur */}
+            <rect x={hitX} y={ms.cy - 60} width={hitW} height={120} fill="transparent" />
 
-            {/* Double anneau pulsant — actif seulement */}
+            {/* Doubles anneaux pulsants — actif */}
             {active && (
               <>
-                <motion.circle cx={ms.cx} cy={ms.cy} r="28"
-                  fill="none" stroke={ms.color} strokeWidth="1" opacity="0.18"
-                  animate={{ r: [25, 33, 25], opacity: [0.18, 0.4, 0.18] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                />
-                <motion.circle cx={ms.cx} cy={ms.cy} r="19"
-                  fill="none" stroke={ms.color} strokeWidth="1.5" opacity="0.45"
-                  animate={{ r: [17, 23, 17], opacity: [0.45, 0.8, 0.45] }}
-                  transition={{ duration: 2.4, repeat: Infinity, delay: 0.4 }}
-                />
+                <motion.circle cx={ms.cx} cy={ms.cy} r="36"
+                  fill="none" stroke={ms.color} strokeWidth="1.5" opacity="0.18"
+                  animate={{ r: [32, 42, 32], opacity: [0.18, 0.4, 0.18] }}
+                  transition={{ duration: 3, repeat: Infinity }} />
+                <motion.circle cx={ms.cx} cy={ms.cy} r="24"
+                  fill="none" stroke={ms.color} strokeWidth="2" opacity="0.45"
+                  animate={{ r: [21, 30, 21], opacity: [0.45, 0.85, 0.45] }}
+                  transition={{ duration: 2.4, repeat: Infinity, delay: 0.4 }} />
               </>
             )}
 
             {/* Halo de fond */}
-            <circle cx={ms.cx} cy={ms.cy} r={active ? 22 : 15}
-              fill={ms.color} opacity={active ? 0.15 : 0.05} />
+            <circle cx={ms.cx} cy={ms.cy} r={active ? 28 : 20}
+              fill={ms.color} opacity={active ? 0.15 : 0.06} />
 
-            {/* Diamant — plus grand si actif */}
+            {/* Diamant */}
             <motion.g
               initial={{ opacity: 0, scale: 0 }}
-              animate={inView
-                ? { opacity: active ? 1 : 0.5, scale: active ? 1.35 : 1 }
-                : { opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: active ? 1 : 0.55, scale: active ? 1.35 : 1 } : { opacity: 0, scale: 0 }}
               transition={{ delay: 0.5 + i * 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <rect x={ms.cx - 12} y={ms.cy - 12} width="24" height="24"
+              <rect x={ms.cx - 16} y={ms.cy - 16} width="32" height="32"
                 transform={`rotate(45, ${ms.cx}, ${ms.cy})`}
                 fill={active ? ms.color + '44' : ms.color + '18'}
-                stroke={ms.color} strokeWidth={active ? 2.5 : 1.5}
-                filter="url(#mobileNodeGlow)"
-              />
-              <circle cx={ms.cx} cy={ms.cy} r={active ? 5.5 : 3.5}
+                stroke={ms.color} strokeWidth={active ? 3 : 2}
+                filter="url(#mobileNodeGlow)" />
+              <circle cx={ms.cx} cy={ms.cy} r={active ? 8 : 5}
                 fill={ms.color} filter="url(#mobileNodeGlow)" />
             </motion.g>
 
@@ -569,34 +660,46 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
               transition={{ delay: 0.7 + i * 0.4 }}
             >
               {/* Chapitre · Période */}
-              <text x={labelX} y={ms.cy - 16}
+              <text x={labelX} y={ms.cy - (t2 ? 32 : 26)}
                 textAnchor={anchor} fill={ms.color}
-                fontSize="8.5" fontFamily="Cinzel" letterSpacing="0.5"
+                fontSize="14" fontFamily="Cinzel" letterSpacing="0.5"
                 opacity={active ? 1 : 0.65}>
                 {ms.chapter} · {ms.period}
               </text>
 
-              {/* Titre */}
-              <text x={labelX} y={ms.cy + 1}
+              {/* Titre — ligne 1 */}
+              <text x={labelX} y={ms.cy + (t2 ? -10 : 2)}
                 textAnchor={anchor}
-                fill={active ? '#e8ddd0' : '#8a7a6a'}
-                fontSize="11" fontFamily="Cinzel"
+                fill={active ? '#e8ddd0' : '#9a8a7a'}
+                fontSize="18" fontFamily="Cinzel"
                 fontWeight={active ? 'bold' : 'normal'}
-                opacity={active ? 1 : 0.75}>
-                {ms.title}
+                opacity={active ? 1 : 0.8}>
+                {t1}
               </text>
+
+              {/* Titre — ligne 2 (si nécessaire) */}
+              {t2 && (
+                <text x={labelX} y={ms.cy + 14}
+                  textAnchor={anchor}
+                  fill={active ? '#e8ddd0' : '#9a8a7a'}
+                  fontSize="18" fontFamily="Cinzel"
+                  fontWeight={active ? 'bold' : 'normal'}
+                  opacity={active ? 1 : 0.8}>
+                  {t2}
+                </text>
+              )}
 
               {/* Indicateur bas */}
               {active ? (
-                <text x={labelX} y={ms.cy + 18}
+                <text x={labelX} y={ms.cy + (t2 ? 38 : 24)}
                   textAnchor={anchor} fill={ms.color}
-                  fontSize="9" fontFamily="Cinzel" opacity="0.85">
+                  fontSize="14" fontFamily="Cinzel" opacity="0.88">
                   ◆ {ms.location}
                 </text>
               ) : (
-                <text x={labelX} y={ms.cy + 18}
+                <text x={labelX} y={ms.cy + (t2 ? 38 : 24)}
                   textAnchor={anchor} fill={ms.color}
-                  fontSize="9" fontFamily="Cinzel" opacity="0.65">
+                  fontSize="14" fontFamily="Cinzel" opacity="0.65">
                   ◈ Appuyer pour voir
                 </text>
               )}
@@ -971,6 +1074,7 @@ export default function Journey() {
           >
             <MobileJourneyPath
               inView={inView}
+              mapProgress={mapProgress}
               selectedIndex={selectedMobileMs}
               onSelect={setSelectedMobileMs}
             />
