@@ -339,7 +339,7 @@ export default function Creative() {
         style={{ width: 'min(400px, 35vw)', height: 'min(600px, 50vw)', background: 'radial-gradient(circle, #a78bfa 0%, transparent 70%)', filter: 'blur(100px)', opacity: 0.04 }}
       />
 
-      <div className="container-arcane">
+      <div className="container-arcane" ref={ref}>
         {/* ── Section header ── */}
         <motion.div
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: exitYRef.current }}
@@ -394,7 +394,6 @@ export default function Creative() {
         {/* ── Grid ── */}
         <motion.div
           key={activeTab}
-          ref={ref}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.35 }}

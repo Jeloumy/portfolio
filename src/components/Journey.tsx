@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView, useScroll, useTransform, MotionValue, AnimatePresence } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, useSpring, MotionValue, AnimatePresence } from 'framer-motion'
 import { getScrollDir } from '../hooks/useScrollDirection'
 import { MapPin } from 'lucide-react'
 
@@ -1003,9 +1003,10 @@ export default function Journey() {
     target: sectionRef,
     offset: ['start end', 'end start'],
   })
-  const mapProgress       = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
-  // Mobile: plage plus large → le chemin se trace sur toute la descente de la section
-  const mobileMapProgress = useTransform(scrollYProgress, [0.05, 0.7], [0, 1])
+  const mapProgress          = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
+  // Mobile: plage [0.05, 0.62] + spring → plus de progression par scroll, animation lissée
+  const rawMobileProgress    = useTransform(scrollYProgress, [0.05, 0.62], [0, 1])
+  const mobileMapProgress    = useSpring(rawMobileProgress, { stiffness: 60, damping: 20, mass: 0.5 })
   const [selectedMobileMs, setSelectedMobileMs] = useState(0)
 
   return (
