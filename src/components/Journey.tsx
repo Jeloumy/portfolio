@@ -432,9 +432,9 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
 }
 
 // ── Mobile vertical journey path — full visual treatment ─────────────────────
-// Points calculés mathématiquement sur la courbe de Bézier
-function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
-  inView: boolean; selectedIndex: number; onSelect: (i: number) => void
+function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
+  inView: boolean; mapProgress: MotionValue<number>;
+  selectedIndex: number; onSelect: (i: number) => void
 }) {
   const pathRef = useRef<SVGPathElement>(null)
   const [pathLen, setPathLen] = useState(0)
@@ -444,9 +444,14 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength())
   }, [])
 
+  // Scroll-driven : se trace en avançant, s'efface en remontant
+  const strokeDashoffset = useTransform(mapProgress, (p) =>
+    pathLen > 0 ? pathLen * (1 - Math.max(0, Math.min(1, p))) : pathLen
+  )
+
   const SIDES: ('left' | 'right')[] = ['left', 'right', 'left']
   const CX = 200
-  const GAP = 40
+  const GAP = 35
 
   const mobileMs = [
     { ...MILESTONES[0], cx: CX, cy: 130 },
@@ -529,7 +534,7 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
       {/* Chemin de référence (mesure de longueur) */}
       <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
 
-      {/* Chemin inView-based — animation fluide 2.2s, se dessine à l'entrée, s'efface au retour */}
+      {/* Chemin scroll-driven — se trace en avançant, s'efface en remontant */}
       {pathLen > 0 && (
         <motion.path
           d={MOBILE_PATH_D}
@@ -538,10 +543,10 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
-          initial={{ strokeDashoffset: pathLen }}
-          animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: pathLen }}
-          transition={{ duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
-          style={{ filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))' }}
+          style={{
+            strokeDashoffset,
+            filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))',
+          }}
         />
       )}
 
@@ -612,6 +617,9 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
               </>
             )}
 
+            {/* Backdrop sombre — perce la ligne pour que le diamant soit AU-DESSUS */}
+            <circle cx={ms.cx} cy={ms.cy} r="24" fill="#09090f" />
+
             {/* Halo de fond */}
             <circle cx={ms.cx} cy={ms.cy} r={active ? 28 : 20}
               fill={ms.color} opacity={active ? 0.15 : 0.06} />
@@ -631,36 +639,36 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
                 fill={ms.color} filter="url(#mobileNodeGlow)" />
             </motion.g>
 
-            {/* Étiquettes */}
+            {/* Étiquettes — textes calibrés pour rester dans le viewBox 400px */}
             <motion.g
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.7 + i * 0.4 }}
             >
-              {/* Chapitre · Période */}
+              {/* Numéro de chapitre · Période (abrégé pour éviter le crop) */}
               <text x={labelX} y={ms.cy - (t2 ? 32 : 26)}
                 textAnchor={anchor} fill={ms.color}
-                fontSize="14" fontFamily="Cinzel" letterSpacing="0.5"
+                fontSize="12" fontFamily="Cinzel" letterSpacing="0.4"
                 opacity={active ? 1 : 0.65}>
-                {ms.chapter} · {ms.period}
+                {ms.chapter.replace('Chapitre ', '')} · {ms.period}
               </text>
 
               {/* Titre — ligne 1 */}
               <text x={labelX} y={ms.cy + (t2 ? -10 : 2)}
                 textAnchor={anchor}
                 fill={active ? '#e8ddd0' : '#9a8a7a'}
-                fontSize="18" fontFamily="Cinzel"
+                fontSize="15" fontFamily="Cinzel"
                 fontWeight={active ? 'bold' : 'normal'}
                 opacity={active ? 1 : 0.8}>
                 {t1}
               </text>
 
-              {/* Titre — ligne 2 (si nécessaire) */}
+              {/* Titre — ligne 2 */}
               {t2 && (
-                <text x={labelX} y={ms.cy + 14}
+                <text x={labelX} y={ms.cy + 12}
                   textAnchor={anchor}
                   fill={active ? '#e8ddd0' : '#9a8a7a'}
-                  fontSize="18" fontFamily="Cinzel"
+                  fontSize="15" fontFamily="Cinzel"
                   fontWeight={active ? 'bold' : 'normal'}
                   opacity={active ? 1 : 0.8}>
                   {t2}
@@ -669,16 +677,16 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
 
               {/* Indicateur bas */}
               {active ? (
-                <text x={labelX} y={ms.cy + (t2 ? 38 : 24)}
+                <text x={labelX} y={ms.cy + (t2 ? 34 : 20)}
                   textAnchor={anchor} fill={ms.color}
-                  fontSize="14" fontFamily="Cinzel" opacity="0.88">
+                  fontSize="12" fontFamily="Cinzel" opacity="0.88">
                   ◆ {ms.location}
                 </text>
               ) : (
-                <text x={labelX} y={ms.cy + (t2 ? 38 : 24)}
+                <text x={labelX} y={ms.cy + (t2 ? 34 : 20)}
                   textAnchor={anchor} fill={ms.color}
-                  fontSize="14" fontFamily="Cinzel" opacity="0.65">
-                  ◈ Appuyer pour voir
+                  fontSize="12" fontFamily="Cinzel" opacity="0.65">
+                  ◈ Appuyer
                 </text>
               )}
             </motion.g>
@@ -995,7 +1003,9 @@ export default function Journey() {
     target: sectionRef,
     offset: ['start end', 'end start'],
   })
-  const mapProgress = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
+  const mapProgress       = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
+  // Mobile: plage plus large → le chemin se trace sur toute la descente de la section
+  const mobileMapProgress = useTransform(scrollYProgress, [0.05, 0.7], [0, 1])
   const [selectedMobileMs, setSelectedMobileMs] = useState(0)
 
   return (
@@ -1052,6 +1062,7 @@ export default function Journey() {
           >
             <MobileJourneyPath
               inView={inView}
+              mapProgress={mobileMapProgress}
               selectedIndex={selectedMobileMs}
               onSelect={setSelectedMobileMs}
             />
