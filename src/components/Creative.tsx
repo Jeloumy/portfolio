@@ -175,7 +175,7 @@ function CreativeCard({ item, color, CenterIcon, isVideo, delay, inView, exitY }
       <div
         className="relative overflow-hidden"
         style={{
-          height: 'clamp(150px, 16vw, 200px)',
+          height: 'clamp(200px, 16vw, 220px)',
           background: item.thumbnailBg ?? `linear-gradient(145deg, ${color}0a, #080810)`,
         }}
       >
@@ -233,7 +233,7 @@ function CreativeCard({ item, color, CenterIcon, isVideo, delay, inView, exitY }
             loading="lazy"
             decoding="async"
             className="absolute inset-0 w-full h-full object-contain"
-            style={{ padding: '10%' }}
+            style={{ padding: '5%' }}
           />
         ) : (
           <>

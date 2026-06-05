@@ -343,3 +343,10 @@ body {
 @keyframes orbit-nav-counter { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 .animate-orbit-nav { animation: orbit-nav 45s linear infinite; }
 .animate-orbit-nav-counter { animation: orbit-nav-counter 45s linear infinite; }
+
+/* ─── Touch / mobile: restore native cursor ────────────────── */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none !important; }
+  .btn-arcane, .btn-arcane-solid, a, button { cursor: auto; }
+}

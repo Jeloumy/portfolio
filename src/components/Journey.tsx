@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView, useScroll, useTransform, MotionValue } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform, MotionValue, AnimatePresence } from 'framer-motion'
 import { getScrollDir } from '../hooks/useScrollDirection'
 import { MapPin } from 'lucide-react'
 
@@ -431,6 +431,158 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
   )
 }
 
+// ── Mobile vertical journey path (interactive) ───────────────────────────────
+function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
+  inView: boolean; selectedIndex: number; onSelect: (i: number) => void
+}) {
+  const pathRef = useRef<SVGPathElement>(null)
+  const [pathLen, setPathLen] = useState(0)
+  const MOBILE_PATH_D = 'M 50 80 C 28 168 72 210 50 290 C 28 372 72 412 50 500'
+
+  useEffect(() => {
+    if (pathRef.current) setPathLen(pathRef.current.getTotalLength())
+  }, [])
+
+  const mobileDots: [number, number, string][] = [
+    [47, 122, '#a78bfa'], [53, 155, '#a78bfa'], [46, 188, '#a78bfa'],
+    [54, 218, '#c9a54e'], [47, 338, '#c9a54e'], [53, 365, '#c9a54e'],
+    [46, 428, '#f43f5e'], [53, 458, '#f43f5e'],
+  ]
+
+  const mobileMs = [
+    { ...MILESTONES[0], cx: 50, cy: 80 },
+    { ...MILESTONES[1], cx: 50, cy: 290 },
+    { ...MILESTONES[2], cx: 50, cy: 500 },
+  ]
+
+  return (
+    <svg
+      viewBox="0 0 300 580"
+      preserveAspectRatio="xMinYMid meet"
+      style={{ width: '100%', height: 'auto', overflow: 'visible', display: 'block' }}
+    >
+      <defs>
+        <linearGradient id="mobileJourneyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#a78bfa" />
+          <stop offset="50%" stopColor="#c9a54e" />
+          <stop offset="100%" stopColor="#f43f5e" />
+        </linearGradient>
+        <filter id="mobileNodeGlow">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+
+      {/* Subtle dot grid */}
+      {[...Array(7)].map((_, row) =>
+        [...Array(4)].map((__, col) => (
+          <circle key={`${row}-${col}`} cx={col * 72 + 12} cy={row * 88 + 12} r="0.8" fill="#c9a54e" opacity="0.04" />
+        ))
+      )}
+
+      {/* Constellation dots along path */}
+      {mobileDots.map(([px, py, fill], i) => (
+        <motion.circle key={i} cx={px} cy={py} r="1.8"
+          fill={fill}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={inView ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0 }}
+          transition={{ duration: 0.2, delay: 0.05 * i + 0.5 }}
+        />
+      ))}
+
+      {/* Hidden path for length measurement */}
+      <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
+
+      {/* Animated gradient path with glow */}
+      {pathLen > 0 && (
+        <motion.path
+          d={MOBILE_PATH_D}
+          stroke="url(#mobileJourneyGrad)"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={pathLen}
+          initial={{ strokeDashoffset: pathLen, opacity: 0 }}
+          animate={inView ? { strokeDashoffset: 0, opacity: 1 } : { strokeDashoffset: pathLen, opacity: 0 }}
+          transition={{ duration: 1.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
+          style={{ filter: 'drop-shadow(0 0 5px rgba(201,165,78,0.5))' }}
+        />
+      )}
+
+      {/* Milestone nodes (clickable) */}
+      {mobileMs.map((ms, i) => {
+        const active = selectedIndex === i
+        return (
+          <g key={ms.id} onClick={() => onSelect(i)} style={{ cursor: 'pointer' }}>
+            {/* Large transparent hit area for easy tapping */}
+            <rect x={ms.cx - 28} y={ms.cy - 32} width="270" height="64" fill="transparent" />
+
+            {/* Pulsing halo — actif uniquement */}
+            {active && (
+              <motion.circle cx={ms.cx} cy={ms.cy} r="20"
+                fill="none" stroke={ms.color} strokeWidth="1" opacity="0.35"
+                animate={{ r: [17, 23, 17], opacity: [0.35, 0.7, 0.35] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              />
+            )}
+
+            {/* Outer soft glow */}
+            <circle cx={ms.cx} cy={ms.cy} r="18" fill={ms.color} opacity={active ? 0.12 : 0.04} />
+
+            {/* Diamond marker */}
+            <motion.g
+              initial={{ opacity: 0, scale: 0 }}
+              animate={inView ? { opacity: 1, scale: active ? 1.2 : 1 } : { opacity: 0, scale: 0 }}
+              transition={{ delay: 0.5 + i * 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <rect x={ms.cx - 9} y={ms.cy - 9} width="18" height="18"
+                transform={`rotate(45, ${ms.cx}, ${ms.cy})`}
+                fill={active ? ms.color + '33' : ms.color + '18'}
+                stroke={ms.color} strokeWidth={active ? 2 : 1.5}
+                filter="url(#mobileNodeGlow)"
+              />
+              <circle cx={ms.cx} cy={ms.cy} r={active ? 4 : 3} fill={ms.color} filter="url(#mobileNodeGlow)" />
+            </motion.g>
+
+            {/* Labels */}
+            <motion.g
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: 0.7 + i * 0.4 }}
+            >
+              <text x={ms.cx + 24} y={ms.cy - 11}
+                textAnchor="start" fill={ms.color} fontSize="6.5" fontFamily="Cinzel" letterSpacing="0.8"
+                opacity={active ? 0.9 : 0.55}>
+                {ms.chapter} · {ms.period}
+              </text>
+              <text x={ms.cx + 24} y={ms.cy + 3}
+                textAnchor="start"
+                fill={active ? '#e8ddd0' : '#7a6a5a'}
+                fontSize="9" fontFamily="Cinzel" fontWeight={active ? 'bold' : 'normal'}>
+                {ms.title}
+              </text>
+              {/* "Voir détails" indicator on inactive nodes */}
+              {!active && (
+                <text x={ms.cx + 24} y={ms.cy + 16}
+                  textAnchor="start" fill={ms.color} fontSize="6" fontFamily="Cinzel" opacity="0.45">
+                  ◈ appuyer pour voir
+                </text>
+              )}
+              {/* Active indicator */}
+              {active && (
+                <text x={ms.cx + 24} y={ms.cy + 16}
+                  textAnchor="start" fill={ms.color} fontSize="6" fontFamily="Cinzel" opacity="0.75">
+                  ◆ {ms.location}
+                </text>
+              )}
+            </motion.g>
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
 const CHAPTER_NUMERALS = ['I', 'II', 'III']
 
 // ── Internship stages ─────────────────────────────────────────────────────────
@@ -738,6 +890,7 @@ export default function Journey() {
     offset: ['start end', 'end start'],
   })
   const mapProgress = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
+  const [selectedMobileMs, setSelectedMobileMs] = useState(0)
 
   return (
     <section className="relative overflow-hidden bg-[#080812]"
@@ -783,8 +936,43 @@ export default function Journey() {
           <JourneyMap inView={inView} mapProgress={mapProgress} />
         </motion.div>
 
-        {/* Milestone cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 'clamp(1.5rem, 2vw, 2rem)' }}>
+        {/* ── Mobile : chemin interactif + carte sélectionnée ── */}
+        <div className="block md:hidden" style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{ marginBottom: '1.75rem' }}
+          >
+            <MobileJourneyPath
+              inView={inView}
+              selectedIndex={selectedMobileMs}
+              onSelect={setSelectedMobileMs}
+            />
+          </motion.div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedMobileMs}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+            >
+              <MilestoneCard
+                ms={MILESTONES[selectedMobileMs]}
+                i={selectedMobileMs}
+                inView={true}
+                exitY={0}
+                stages={MILESTONES[selectedMobileMs].id === 'mmi' ? STAGES : undefined}
+                alternances={MILESTONES[selectedMobileMs].id === 'mastere' ? ALTERNANCES_MASTERE : undefined}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ── Desktop : 3 cartes côte à côte ── */}
+        <div className="hidden md:grid md:grid-cols-3" style={{ gap: 'clamp(1.5rem, 2vw, 2rem)' }}>
           {MILESTONES.map((ms, i) => (
             <MilestoneCard
               key={ms.id}

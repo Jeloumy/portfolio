@@ -4,15 +4,19 @@ export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const [hovering, setHovering] = useState(false)
+  const [visible, setVisible] = useState(false)
   const pos = useRef({ x: 0, y: 0 })
   const ringPos = useRef({ x: 0, y: 0 })
   const animRef = useRef<number>(0)
 
   useEffect(() => {
+    const isTouch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0
+    if (isTouch) return
+    setVisible(true)
+
     const move = (e: MouseEvent) => {
       pos.current.x = e.clientX
       pos.current.y = e.clientY
-      // transform seul — pas de left/top, zéro reflow
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`
       }
@@ -53,6 +57,8 @@ export default function CustomCursor() {
       obs.disconnect()
     }
   }, [])
+
+  if (!visible) return null
 
   return (
     <>
