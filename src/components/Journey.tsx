@@ -432,33 +432,40 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
 }
 
 // ── Mobile vertical journey path (interactive) ───────────────────────────────
+// Chemin centré, alternance gauche/droite, textes lisibles
 function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
   inView: boolean; selectedIndex: number; onSelect: (i: number) => void
 }) {
   const pathRef = useRef<SVGPathElement>(null)
   const [pathLen, setPathLen] = useState(0)
-  const MOBILE_PATH_D = 'M 50 80 C 28 168 72 210 50 290 C 28 372 72 412 50 500'
+  // Path centré sur x=200 dans un viewBox 400×580
+  const MOBILE_PATH_D = 'M 200 80 C 178 168 222 210 200 290 C 178 372 222 412 200 500'
 
   useEffect(() => {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength())
   }, [])
 
+  // Alternance : 0=gauche, 1=droite, 2=gauche
+  const SIDES: ('left' | 'right')[] = ['left', 'right', 'left']
+  const CX = 200
+  const GAP = 32 // distance entre le diamant et le début du texte
+
   const mobileDots: [number, number, string][] = [
-    [47, 122, '#a78bfa'], [53, 155, '#a78bfa'], [46, 188, '#a78bfa'],
-    [54, 218, '#c9a54e'], [47, 338, '#c9a54e'], [53, 365, '#c9a54e'],
-    [46, 428, '#f43f5e'], [53, 458, '#f43f5e'],
+    [197, 122, '#a78bfa'], [203, 155, '#a78bfa'], [196, 188, '#a78bfa'],
+    [204, 218, '#c9a54e'], [197, 338, '#c9a54e'], [203, 365, '#c9a54e'],
+    [196, 428, '#f43f5e'], [204, 458, '#f43f5e'],
   ]
 
   const mobileMs = [
-    { ...MILESTONES[0], cx: 50, cy: 80 },
-    { ...MILESTONES[1], cx: 50, cy: 290 },
-    { ...MILESTONES[2], cx: 50, cy: 500 },
+    { ...MILESTONES[0], cx: CX, cy: 80 },
+    { ...MILESTONES[1], cx: CX, cy: 290 },
+    { ...MILESTONES[2], cx: CX, cy: 500 },
   ]
 
   return (
     <svg
-      viewBox="0 0 300 580"
-      preserveAspectRatio="xMinYMid meet"
+      viewBox="0 0 400 580"
+      preserveAspectRatio="xMidYMid meet"
       style={{ width: '100%', height: 'auto', overflow: 'visible', display: 'block' }}
     >
       <defs>
@@ -468,111 +475,129 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
           <stop offset="100%" stopColor="#f43f5e" />
         </linearGradient>
         <filter id="mobileNodeGlow">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
-      {/* Subtle dot grid */}
-      {[...Array(7)].map((_, row) =>
-        [...Array(4)].map((__, col) => (
-          <circle key={`${row}-${col}`} cx={col * 72 + 12} cy={row * 88 + 12} r="0.8" fill="#c9a54e" opacity="0.04" />
-        ))
-      )}
-
-      {/* Constellation dots along path */}
+      {/* Constellation dots le long du chemin */}
       {mobileDots.map(([px, py, fill], i) => (
-        <motion.circle key={i} cx={px} cy={py} r="1.8"
+        <motion.circle key={i} cx={px} cy={py} r="3"
           fill={fill}
           initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 0.4, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 0.2, delay: 0.05 * i + 0.5 }}
+          animate={inView ? { opacity: 0.55, scale: 1 } : { opacity: 0, scale: 0 }}
+          transition={{ duration: 0.25, delay: 0.05 * i + 0.5 }}
         />
       ))}
 
-      {/* Hidden path for length measurement */}
+      {/* Chemin de référence (pour getTotalLength) */}
       <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
 
-      {/* Animated gradient path with glow */}
+      {/* Chemin gradient animé — plus épais */}
       {pathLen > 0 && (
         <motion.path
           d={MOBILE_PATH_D}
           stroke="url(#mobileJourneyGrad)"
-          strokeWidth="2.5"
+          strokeWidth="5"
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
           initial={{ strokeDashoffset: pathLen, opacity: 0 }}
           animate={inView ? { strokeDashoffset: 0, opacity: 1 } : { strokeDashoffset: pathLen, opacity: 0 }}
           transition={{ duration: 1.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.2 }}
-          style={{ filter: 'drop-shadow(0 0 5px rgba(201,165,78,0.5))' }}
+          style={{ filter: 'drop-shadow(0 0 7px rgba(201,165,78,0.6))' }}
         />
       )}
 
-      {/* Milestone nodes (clickable) */}
+      {/* Nœuds cliquables */}
       {mobileMs.map((ms, i) => {
         const active = selectedIndex === i
+        const side = SIDES[i]
+        const labelX = side === 'left' ? ms.cx - GAP : ms.cx + GAP
+        const anchor = side === 'left' ? 'end' : 'start'
+        // Zone de tap : toute la moitié du SVG côté label
+        const hitX = side === 'left' ? 0 : ms.cx - GAP
+        const hitW = side === 'left' ? ms.cx + GAP : 400 - (ms.cx - GAP)
+
         return (
           <g key={ms.id} onClick={() => onSelect(i)} style={{ cursor: 'pointer' }}>
-            {/* Large transparent hit area for easy tapping */}
-            <rect x={ms.cx - 28} y={ms.cy - 32} width="270" height="64" fill="transparent" />
+            {/* Zone de tap large pour mobile */}
+            <rect x={hitX} y={ms.cy - 40} width={hitW} height={80} fill="transparent" />
 
-            {/* Pulsing halo — actif uniquement */}
+            {/* Double anneau pulsant — actif seulement */}
             {active && (
-              <motion.circle cx={ms.cx} cy={ms.cy} r="20"
-                fill="none" stroke={ms.color} strokeWidth="1" opacity="0.35"
-                animate={{ r: [17, 23, 17], opacity: [0.35, 0.7, 0.35] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
-              />
+              <>
+                <motion.circle cx={ms.cx} cy={ms.cy} r="28"
+                  fill="none" stroke={ms.color} strokeWidth="1" opacity="0.18"
+                  animate={{ r: [25, 33, 25], opacity: [0.18, 0.4, 0.18] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                />
+                <motion.circle cx={ms.cx} cy={ms.cy} r="19"
+                  fill="none" stroke={ms.color} strokeWidth="1.5" opacity="0.45"
+                  animate={{ r: [17, 23, 17], opacity: [0.45, 0.8, 0.45] }}
+                  transition={{ duration: 2.4, repeat: Infinity, delay: 0.4 }}
+                />
+              </>
             )}
 
-            {/* Outer soft glow */}
-            <circle cx={ms.cx} cy={ms.cy} r="18" fill={ms.color} opacity={active ? 0.12 : 0.04} />
+            {/* Halo de fond */}
+            <circle cx={ms.cx} cy={ms.cy} r={active ? 22 : 15}
+              fill={ms.color} opacity={active ? 0.15 : 0.05} />
 
-            {/* Diamond marker */}
+            {/* Diamant — plus grand si actif */}
             <motion.g
               initial={{ opacity: 0, scale: 0 }}
-              animate={inView ? { opacity: 1, scale: active ? 1.2 : 1 } : { opacity: 0, scale: 0 }}
+              animate={inView
+                ? { opacity: active ? 1 : 0.5, scale: active ? 1.35 : 1 }
+                : { opacity: 0, scale: 0 }}
               transition={{ delay: 0.5 + i * 0.4, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <rect x={ms.cx - 9} y={ms.cy - 9} width="18" height="18"
+              <rect x={ms.cx - 12} y={ms.cy - 12} width="24" height="24"
                 transform={`rotate(45, ${ms.cx}, ${ms.cy})`}
-                fill={active ? ms.color + '33' : ms.color + '18'}
-                stroke={ms.color} strokeWidth={active ? 2 : 1.5}
+                fill={active ? ms.color + '44' : ms.color + '18'}
+                stroke={ms.color} strokeWidth={active ? 2.5 : 1.5}
                 filter="url(#mobileNodeGlow)"
               />
-              <circle cx={ms.cx} cy={ms.cy} r={active ? 4 : 3} fill={ms.color} filter="url(#mobileNodeGlow)" />
+              <circle cx={ms.cx} cy={ms.cy} r={active ? 5.5 : 3.5}
+                fill={ms.color} filter="url(#mobileNodeGlow)" />
             </motion.g>
 
-            {/* Labels */}
+            {/* Étiquettes */}
             <motion.g
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.7 + i * 0.4 }}
             >
-              <text x={ms.cx + 24} y={ms.cy - 11}
-                textAnchor="start" fill={ms.color} fontSize="6.5" fontFamily="Cinzel" letterSpacing="0.8"
-                opacity={active ? 0.9 : 0.55}>
+              {/* Chapitre · Période */}
+              <text x={labelX} y={ms.cy - 16}
+                textAnchor={anchor} fill={ms.color}
+                fontSize="8.5" fontFamily="Cinzel" letterSpacing="0.5"
+                opacity={active ? 1 : 0.65}>
                 {ms.chapter} · {ms.period}
               </text>
-              <text x={ms.cx + 24} y={ms.cy + 3}
-                textAnchor="start"
-                fill={active ? '#e8ddd0' : '#7a6a5a'}
-                fontSize="9" fontFamily="Cinzel" fontWeight={active ? 'bold' : 'normal'}>
+
+              {/* Titre */}
+              <text x={labelX} y={ms.cy + 1}
+                textAnchor={anchor}
+                fill={active ? '#e8ddd0' : '#8a7a6a'}
+                fontSize="11" fontFamily="Cinzel"
+                fontWeight={active ? 'bold' : 'normal'}
+                opacity={active ? 1 : 0.75}>
                 {ms.title}
               </text>
-              {/* "Voir détails" indicator on inactive nodes */}
-              {!active && (
-                <text x={ms.cx + 24} y={ms.cy + 16}
-                  textAnchor="start" fill={ms.color} fontSize="6" fontFamily="Cinzel" opacity="0.45">
-                  ◈ appuyer pour voir
-                </text>
-              )}
-              {/* Active indicator */}
-              {active && (
-                <text x={ms.cx + 24} y={ms.cy + 16}
-                  textAnchor="start" fill={ms.color} fontSize="6" fontFamily="Cinzel" opacity="0.75">
+
+              {/* Indicateur bas */}
+              {active ? (
+                <text x={labelX} y={ms.cy + 18}
+                  textAnchor={anchor} fill={ms.color}
+                  fontSize="9" fontFamily="Cinzel" opacity="0.85">
                   ◆ {ms.location}
+                </text>
+              ) : (
+                <text x={labelX} y={ms.cy + 18}
+                  textAnchor={anchor} fill={ms.color}
+                  fontSize="9" fontFamily="Cinzel" opacity="0.65">
+                  ◈ Appuyer pour voir
                 </text>
               )}
             </motion.g>
