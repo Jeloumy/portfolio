@@ -1004,8 +1004,8 @@ export default function Journey() {
     offset: ['start end', 'end start'],
   })
   const mapProgress       = useTransform(scrollYProgress, [0.02, 0.32], [0, 1])
-  // Mobile: démarre à 15% du scroll, suit 1:1 sans spring (pas de lag)
-  const mobileMapProgress = useTransform(scrollYProgress, [0.15, 0.9], [0, 1])
+  // Mobile: démarre à 10% du scroll de la section, termine à 45% (calé sur la hauteur SVG)
+  const mobileMapProgress = useTransform(scrollYProgress, [0.1, 0.45], [0, 1])
   const [selectedMobileMs, setSelectedMobileMs] = useState(0)
 
   return (
