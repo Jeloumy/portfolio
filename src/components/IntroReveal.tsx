@@ -21,101 +21,101 @@ export default function IntroReveal() {
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 99999, pointerEvents: opening ? 'none' : 'all' }}>
 
-      {/* ── Panneau gauche — le verrou est à l'intérieur, se déplace à la même vitesse ── */}
+      {/* ── Panneau gauche ── */}
       <motion.div
         animate={opening ? { x: '-120%' } : { x: 0 }}
         transition={{ duration: 1.1, ease: EASE_DOOR, delay: 0.05 }}
-        style={{
-          position: 'absolute', top: 0, left: 0, bottom: 0, right: '50%',
-          background: '#06060f',
-          overflow: 'visible',
-        }}
+        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: '50%', background: '#06060f' }}
       >
-        {/* Bord doré */}
         <div style={{
           position: 'absolute', top: 0, right: 0, bottom: 0, width: '1px',
           background: 'linear-gradient(180deg, transparent, #c9a54e55 30%, #c9a54e88 50%, #c9a54e55 70%, transparent)',
         }} />
+      </motion.div>
 
-        {/* Verrou — centré sur le bord droit du panneau, se déplace avec lui */}
-        <div style={{
+      {/* ── Verrou — élément indépendant, se déplace avec le panneau gauche ── */}
+      <motion.div
+        animate={opening ? { x: '-70vw' } : { x: 0 }}
+        transition={{ duration: 1.1, ease: EASE_DOOR, delay: 0.05 }}
+        style={{
           position: 'absolute',
           top: 'calc(50% - 58px)',
-          right: -58,
+          left: 'calc(50% - 58px)',
           width: 116, height: 116,
-        }}>
-          <motion.div
-            animate={phase !== 'loading' ? { rotate: -90 } : { rotate: 0 }}
-            transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-            style={{
-              width: 116, height: 116, borderRadius: '50%',
-              position: 'relative',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-          >
-            <div style={{
-              position: 'absolute', inset: '-4px', borderRadius: '50%',
-              boxShadow: '0 8px 32px #00000088, 0 2px 8px #00000066, 0 0 60px #c9a54e44, 0 0 120px #c9a54e22',
+          zIndex: 99998,
+        }}
+      >
+        <motion.div
+          animate={phase !== 'loading' ? { rotate: -90 } : { rotate: 0 }}
+          transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
+          style={{
+            width: 116, height: 116, borderRadius: '50%',
+            position: 'relative',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <div style={{
+            position: 'absolute', inset: '-4px', borderRadius: '50%',
+            boxShadow: '0 8px 32px #00000088, 0 2px 8px #00000066, 0 0 60px #c9a54e44, 0 0 120px #c9a54e22',
+          }} />
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: '50%',
+            background: 'linear-gradient(145deg, #f0d870 0%, #c9a54e 30%, #8a6020 65%, #c9a54e 85%, #e8c060 100%)',
+            boxShadow: 'inset 0 -3px 8px #00000066, inset 0 3px 6px #fff3',
+          }} />
+          <div style={{
+            position: 'absolute', inset: '7px', borderRadius: '50%',
+            background: 'linear-gradient(160deg, #d4a840 0%, #a07828 40%, #c9a54e 70%, #9a7030 100%)',
+            boxShadow: 'inset 0 4px 12px #00000077, inset 0 -2px 6px #f0d06033, 0 2px 4px #c9a54e55',
+          }} />
+          {Array.from({ length: 36 }).map((_, i) => (
+            <div key={i} style={{
+              position: 'absolute', top: '50%', left: '50%',
+              width: i % 9 === 0 ? '11px' : i % 3 === 0 ? '7px' : '4px',
+              height: i % 9 === 0 ? '2px' : '1.2px',
+              background: i % 9 === 0 ? '#00000077' : '#00000044',
+              transformOrigin: 'left center',
+              transform: `rotate(${i * 10}deg) translateX(48px) translateY(-50%)`,
+              borderRadius: '1px',
             }} />
-            <div style={{
-              position: 'absolute', inset: 0, borderRadius: '50%',
-              background: 'linear-gradient(145deg, #f0d870 0%, #c9a54e 30%, #8a6020 65%, #c9a54e 85%, #e8c060 100%)',
-              boxShadow: 'inset 0 -3px 8px #00000066, inset 0 3px 6px #fff3',
-            }} />
-            <div style={{
-              position: 'absolute', inset: '7px', borderRadius: '50%',
-              background: 'linear-gradient(160deg, #d4a840 0%, #a07828 40%, #c9a54e 70%, #9a7030 100%)',
-              boxShadow: 'inset 0 4px 12px #00000077, inset 0 -2px 6px #f0d06033, 0 2px 4px #c9a54e55',
-            }} />
-            {Array.from({ length: 36 }).map((_, i) => (
-              <div key={i} style={{
-                position: 'absolute', top: '50%', left: '50%',
-                width: i % 9 === 0 ? '11px' : i % 3 === 0 ? '7px' : '4px',
-                height: i % 9 === 0 ? '2px' : '1.2px',
-                background: i % 9 === 0 ? '#00000077' : '#00000044',
-                transformOrigin: 'left center',
-                transform: `rotate(${i * 10}deg) translateX(48px) translateY(-50%)`,
-                borderRadius: '1px',
-              }} />
-            ))}
-            <div style={{
-              position: 'absolute', inset: '22px', borderRadius: '50%',
-              background: 'linear-gradient(145deg, #c9a54e 0%, #e8c870 35%, #a07828 65%, #c9a54e 100%)',
-              boxShadow: '0 3px 10px #00000066, 0 -1px 4px #f0d06044, inset 0 1px 3px #fff2, inset 0 -2px 4px #00000044',
-            }} />
-            <span style={{
-              position: 'relative', zIndex: 2,
-              fontFamily: "'Cinzel Decorative', serif",
-              fontSize: '2.4rem', fontWeight: 900,
-              color: '#06060f',
-              textShadow: '0 2px 4px #00000099, 0 -1px 0px #c9a54e66',
-              letterSpacing: '-0.02em', lineHeight: 1,
-            }}>J</span>
-          </motion.div>
+          ))}
+          <div style={{
+            position: 'absolute', inset: '22px', borderRadius: '50%',
+            background: 'linear-gradient(145deg, #c9a54e 0%, #e8c870 35%, #a07828 65%, #c9a54e 100%)',
+            boxShadow: '0 3px 10px #00000066, 0 -1px 4px #f0d06044, inset 0 1px 3px #fff2, inset 0 -2px 4px #00000044',
+          }} />
+          <span style={{
+            position: 'relative', zIndex: 2,
+            fontFamily: "'Cinzel Decorative', serif",
+            fontSize: '2.4rem', fontWeight: 900,
+            color: '#06060f',
+            textShadow: '0 2px 4px #00000099, 0 -1px 0px #c9a54e66',
+            letterSpacing: '-0.02em', lineHeight: 1,
+          }}>J</span>
+        </motion.div>
 
-          {phase === 'loading' && (
-            <motion.div
-              animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                position: 'absolute', inset: '-12px', borderRadius: '50%',
-                border: '1px solid #c9a54e55', pointerEvents: 'none',
-              }}
-            />
-          )}
-          {phase === 'unlocking' && (
-            <motion.div
-              initial={{ scale: 1, opacity: 0.8 }}
-              animate={{ scale: 1.8, opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              style={{
-                position: 'absolute', inset: '-8px', borderRadius: '50%',
-                background: 'radial-gradient(circle, #c9a54e44 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }}
-            />
-          )}
-        </div>
+        {phase === 'loading' && (
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{
+              position: 'absolute', inset: '-12px', borderRadius: '50%',
+              border: '1px solid #c9a54e55', pointerEvents: 'none',
+            }}
+          />
+        )}
+        {phase === 'unlocking' && (
+          <motion.div
+            initial={{ scale: 1, opacity: 0.8 }}
+            animate={{ scale: 1.8, opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              position: 'absolute', inset: '-8px', borderRadius: '50%',
+              background: 'radial-gradient(circle, #c9a54e44 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }}
+          />
+        )}
       </motion.div>
 
       {/* ── Panneau droit ── */}

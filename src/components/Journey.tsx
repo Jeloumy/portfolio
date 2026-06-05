@@ -448,23 +448,6 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
   const CX = 200
   const GAP = 40
 
-  // Positions calculées exactement sur les deux segments de Bézier
-  // Segment 1: P0(200,130) P1(172,285) P2(228,395) P3(200,510)
-  // Segment 2: P0(200,510) P1(172,625) P2(228,735) P3(200,860)
-  const mobileDots: [number, number, string][] = [
-    [194, 175, '#a78bfa'],  // seg1 t=0.1
-    [192, 218, '#a78bfa'],  // seg1 t=0.2
-    [196, 298, '#a78bfa'],  // seg1 t=0.4
-    [200, 335, '#c9a54e'],  // seg1 t=0.5
-    [207, 407, '#c9a54e'],  // seg1 t=0.7
-    [208, 441, '#c9a54e'],  // seg1 t=0.8
-    [194, 544, '#c9a54e'],  // seg2 t=0.1
-    [192, 579, '#c9a54e'],  // seg2 t=0.2
-    [200, 681, '#f43f5e'],  // seg2 t=0.5
-    [207, 751, '#f43f5e'],  // seg2 t=0.7
-    [206, 823, '#f43f5e'],  // seg2 t=0.9
-  ]
-
   const mobileMs = [
     { ...MILESTONES[0], cx: CX, cy: 130 },
     { ...MILESTONES[1], cx: CX, cy: 510 },
@@ -543,7 +526,26 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
         </>
       )}
 
-      {/* Marqueurs de stage — remontés sur le chemin */}
+      {/* Chemin de référence (mesure de longueur) */}
+      <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
+
+      {/* Chemin inView-based — animation fluide 2.2s, se dessine à l'entrée, s'efface au retour */}
+      {pathLen > 0 && (
+        <motion.path
+          d={MOBILE_PATH_D}
+          stroke="url(#mobileJourneyGrad)"
+          strokeWidth="10"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={pathLen}
+          initial={{ strokeDashoffset: pathLen }}
+          animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: pathLen }}
+          transition={{ duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
+          style={{ filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))' }}
+        />
+      )}
+
+      {/* Marqueurs de stage — rendus APRÈS le chemin → au-dessus */}
       {[
         { cx: 193, cy: 265, year: '2023', label: 'La Valrassienne', color: '#c9a54e', side: 'left'  as const },
         { cx: 204, cy: 371, year: '2024', label: 'Pass Piscines',   color: '#34d399', side: 'right' as const },
@@ -575,43 +577,6 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
           </motion.g>
         )
       })}
-
-      {/* Chemin de référence (mesure de longueur) */}
-      <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
-
-      {/* Chemin inView-based — animation fluide 2.2s, se dessine à l'entrée, s'efface au retour */}
-      {pathLen > 0 && (
-        <motion.path
-          d={MOBILE_PATH_D}
-          stroke="url(#mobileJourneyGrad)"
-          strokeWidth="10"
-          fill="none"
-          strokeLinecap="round"
-          strokeDasharray={pathLen}
-          initial={{ strokeDashoffset: pathLen }}
-          animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: pathLen }}
-          transition={{ duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
-          style={{ filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))' }}
-        />
-      )}
-
-      {/* Points de constellation — r=9 > demi-trait(5) → clairement au-dessus + bord sombre */}
-      {mobileDots.map(([px, py, fill], i) => (
-        <motion.g key={i}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 0.3, delay: 0.04 * i + 0.5 }}
-        >
-          {/* Halo externe */}
-          <circle cx={px} cy={py} r="11" fill={fill} opacity="0.18" />
-          {/* Bord sombre pour contraste sur le trait */}
-          <circle cx={px} cy={py} r="9" fill="#0d0d1a" opacity="0.9" />
-          {/* Point coloré */}
-          <circle cx={px} cy={py} r="6" fill={fill} opacity="0.95" />
-          {/* Éclat central */}
-          <circle cx={px} cy={py} r="2.5" fill="#ffffff" opacity="0.45" />
-        </motion.g>
-      ))}
 
       {/* Nœuds cliquables */}
       {mobileMs.map((ms, i) => {
