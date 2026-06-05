@@ -432,9 +432,9 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
 }
 
 // ── Mobile vertical journey path — full visual treatment ─────────────────────
-function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
-  inView: boolean; mapProgress: MotionValue<number>;
-  selectedIndex: number; onSelect: (i: number) => void
+// Points calculés mathématiquement sur la courbe de Bézier
+function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
+  inView: boolean; selectedIndex: number; onSelect: (i: number) => void
 }) {
   const pathRef = useRef<SVGPathElement>(null)
   const [pathLen, setPathLen] = useState(0)
@@ -444,20 +444,25 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
     if (pathRef.current) setPathLen(pathRef.current.getTotalLength())
   }, [])
 
-  // Scroll-driven strokeDashoffset — identique au desktop
-  const strokeDashoffset = useTransform(mapProgress, (p) =>
-    pathLen > 0 ? pathLen * (1 - Math.max(0, Math.min(1, p))) : pathLen
-  )
-
   const SIDES: ('left' | 'right')[] = ['left', 'right', 'left']
   const CX = 200
   const GAP = 40
 
+  // Positions calculées exactement sur les deux segments de Bézier
+  // Segment 1: P0(200,130) P1(172,285) P2(228,395) P3(200,510)
+  // Segment 2: P0(200,510) P1(172,625) P2(228,735) P3(200,860)
   const mobileDots: [number, number, string][] = [
-    [195, 195, '#a78bfa'], [205, 245, '#a78bfa'], [194, 300, '#a78bfa'],
-    [206, 355, '#a78bfa'], [195, 415, '#c9a54e'], [205, 460, '#c9a54e'],
-    [195, 565, '#c9a54e'], [205, 615, '#c9a54e'], [194, 665, '#c9a54e'],
-    [206, 720, '#f43f5e'], [195, 775, '#f43f5e'], [205, 820, '#f43f5e'],
+    [194, 175, '#a78bfa'],  // seg1 t=0.1
+    [192, 218, '#a78bfa'],  // seg1 t=0.2
+    [196, 298, '#a78bfa'],  // seg1 t=0.4
+    [200, 335, '#c9a54e'],  // seg1 t=0.5
+    [207, 407, '#c9a54e'],  // seg1 t=0.7
+    [208, 441, '#c9a54e'],  // seg1 t=0.8
+    [194, 544, '#c9a54e'],  // seg2 t=0.1
+    [192, 579, '#c9a54e'],  // seg2 t=0.2
+    [200, 681, '#f43f5e'],  // seg2 t=0.5
+    [207, 751, '#f43f5e'],  // seg2 t=0.7
+    [206, 823, '#f43f5e'],  // seg2 t=0.9
   ]
 
   const mobileMs = [
@@ -538,10 +543,10 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
         </>
       )}
 
-      {/* Marqueurs de stage — même style que desktop */}
+      {/* Marqueurs de stage — remontés sur le chemin */}
       {[
-        { cx: 195, cy: 348, year: '2023', label: 'La Valrassienne', color: '#c9a54e', side: 'left'  as const },
-        { cx: 205, cy: 456, year: '2024', label: 'Pass Piscines',   color: '#34d399', side: 'right' as const },
+        { cx: 193, cy: 265, year: '2023', label: 'La Valrassienne', color: '#c9a54e', side: 'left'  as const },
+        { cx: 204, cy: 371, year: '2024', label: 'Pass Piscines',   color: '#34d399', side: 'right' as const },
       ].map((s) => {
         const lineEndX = s.side === 'left' ? s.cx - 40 : s.cx + 40
         const textX    = s.side === 'left' ? s.cx - 46 : s.cx + 46
@@ -571,20 +576,10 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
         )
       })}
 
-      {/* Points de constellation le long du chemin */}
-      {mobileDots.map(([px, py, fill], i) => (
-        <motion.circle key={i} cx={px} cy={py} r="5"
-          fill={fill}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 0.5, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 0.25, delay: 0.04 * i + 0.4 }}
-        />
-      ))}
-
       {/* Chemin de référence (mesure de longueur) */}
       <path ref={pathRef} d={MOBILE_PATH_D} stroke="none" fill="none" />
 
-      {/* Chemin scroll-driven — se dessine/efface avec le scroll */}
+      {/* Chemin inView-based — animation fluide 2.2s, se dessine à l'entrée, s'efface au retour */}
       {pathLen > 0 && (
         <motion.path
           d={MOBILE_PATH_D}
@@ -593,12 +588,22 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
-          style={{
-            strokeDashoffset,
-            filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))',
-          }}
+          initial={{ strokeDashoffset: pathLen }}
+          animate={inView ? { strokeDashoffset: 0 } : { strokeDashoffset: pathLen }}
+          transition={{ duration: 2.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.3 }}
+          style={{ filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))' }}
         />
       )}
+
+      {/* Points de constellation — rendu APRÈS le chemin pour être au-dessus */}
+      {mobileDots.map(([px, py, fill], i) => (
+        <motion.circle key={i} cx={px} cy={py} r="5"
+          fill={fill}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={inView ? { opacity: 0.55, scale: 1 } : { opacity: 0, scale: 0 }}
+          transition={{ duration: 0.25, delay: 0.04 * i + 0.5 }}
+        />
+      ))}
 
       {/* Nœuds cliquables */}
       {mobileMs.map((ms, i) => {
@@ -1074,7 +1079,6 @@ export default function Journey() {
           >
             <MobileJourneyPath
               inView={inView}
-              mapProgress={mapProgress}
               selectedIndex={selectedMobileMs}
               onSelect={setSelectedMobileMs}
             />

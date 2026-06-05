@@ -35,7 +35,7 @@ export default function IntroReveal() {
 
       {/* ── Verrou — élément indépendant au-dessus de tout ─ */}
       <motion.div
-        animate={opening ? { x: '-60vw' } : { x: 0 }}
+        animate={opening ? { x: '-110vw' } : { x: 0 }}
         transition={{ duration: 1.1, ease: EASE_DOOR, delay: 0.05 }}
         style={{
           position: 'absolute',
