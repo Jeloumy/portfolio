@@ -595,14 +595,22 @@ function MobileJourneyPath({ inView, selectedIndex, onSelect }: {
         />
       )}
 
-      {/* Points de constellation — rendu APRÈS le chemin pour être au-dessus */}
+      {/* Points de constellation — r=9 > demi-trait(5) → clairement au-dessus + bord sombre */}
       {mobileDots.map(([px, py, fill], i) => (
-        <motion.circle key={i} cx={px} cy={py} r="5"
-          fill={fill}
+        <motion.g key={i}
           initial={{ opacity: 0, scale: 0 }}
-          animate={inView ? { opacity: 0.55, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 0.25, delay: 0.04 * i + 0.5 }}
-        />
+          animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+          transition={{ duration: 0.3, delay: 0.04 * i + 0.5 }}
+        >
+          {/* Halo externe */}
+          <circle cx={px} cy={py} r="11" fill={fill} opacity="0.18" />
+          {/* Bord sombre pour contraste sur le trait */}
+          <circle cx={px} cy={py} r="9" fill="#0d0d1a" opacity="0.9" />
+          {/* Point coloré */}
+          <circle cx={px} cy={py} r="6" fill={fill} opacity="0.95" />
+          {/* Éclat central */}
+          <circle cx={px} cy={py} r="2.5" fill="#ffffff" opacity="0.45" />
+        </motion.g>
       ))}
 
       {/* Nœuds cliquables */}
