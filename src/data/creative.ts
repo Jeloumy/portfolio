@@ -10,7 +10,8 @@ export interface CreativeItem {
   image?: string
   imageBack?: string   // recto/verso : verso de la carte
   thumbnailBg?: string // couleur de fond du haut de la card
-  youtube?: string     // ID de la vidéo YouTube (ex: "S0mrjPUIWYs")
+  youtube?: string           // ID de la vidéo YouTube (ex: "S0mrjPUIWYs")
+  youtubeThumbnail?: string  // frame à utiliser : '1','2','3' ou 'maxresdefault' (défaut)
 }
 
 export interface TabConfig {
@@ -118,25 +119,28 @@ export const FALLBACK_LOGOS: CreativeItem[] = [
 // Met à jour title, desc, tags et badge selon tes vidéos réelles.
 export const VIDEOS: CreativeItem[] = [
   {
-    title: 'Vidéo 1',
-    desc: 'Description à remplir.',
-    tags: ['Premiere Pro', 'After Effects', 'Scénario'],
-    badge: 'YouTube',
+    title: 'Webisode — Cinéma Muet',
+    desc: 'Description à ajouter.',
+    tags: ['Premiere Pro', 'Scénario', 'Réalisation'],
+    badge: 'Webisode',
     youtube: 'S0mrjPUIWYs',
+    youtubeThumbnail: '2',
   },
   {
-    title: 'Vidéo 2',
-    desc: 'Description à remplir.',
-    tags: ['Premiere Pro', 'After Effects'],
-    badge: 'YouTube',
+    title: 'PUB — Krenos',
+    desc: 'Description à ajouter.',
+    tags: ['Premiere Pro', 'After Effects', 'Publicité'],
+    badge: 'Pub',
     youtube: 'fiUdxdoirTM',
+    youtubeThumbnail: '2',
   },
   {
-    title: 'Vidéo 3',
-    desc: 'Description à remplir.',
-    tags: ['After Effects', 'Montage'],
-    badge: 'YouTube',
+    title: 'Court-métrage — Le Chien de Goya',
+    desc: 'Description à ajouter.',
+    tags: ['Premiere Pro', 'After Effects', 'Court-métrage'],
+    badge: 'Court-métrage',
     youtube: 'LG_A0fGIGF8',
+    youtubeThumbnail: '2',
   },
 ]
 
