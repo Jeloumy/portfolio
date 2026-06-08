@@ -281,13 +281,6 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
         </filter>
       </defs>
 
-      {/* ── Background dot grid ── */}
-      {[...Array(12)].map((_, row) =>
-        [...Array(20)].map((__, col) => (
-          <circle key={`${row}-${col}`} cx={col * 63 + 12} cy={row * 28 + 10}
-            r="0.8" fill="#c9a54e" opacity="0.04" />
-        ))
-      )}
 
       {/* ── Terrain: montagnes — dessin + flottement ── */}
       <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
@@ -351,10 +344,7 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
-          style={{
-            strokeDashoffset,
-            filter: 'drop-shadow(0 0 4px rgba(201,165,78,0.6))',
-          }}
+          style={{ strokeDashoffset }}
         />
       )}
 
@@ -481,12 +471,6 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
         </filter>
       </defs>
 
-      {/* Grille de points de fond */}
-      {[...Array(11)].map((_, row) =>
-        [...Array(5)].map((__, col) => (
-          <circle key={`${row}-${col}`} cx={col * 90 + 20} cy={row * 90 + 20} r="1" fill="#c9a54e" opacity="0.04" />
-        ))
-      )}
 
       {/* Montagnes — même style que desktop */}
       <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
@@ -543,10 +527,7 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
           fill="none"
           strokeLinecap="round"
           strokeDasharray={pathLen}
-          style={{
-            strokeDashoffset,
-            filter: 'drop-shadow(0 0 8px rgba(201,165,78,0.65))',
-          }}
+          style={{ strokeDashoffset }}
         />
       )}
 

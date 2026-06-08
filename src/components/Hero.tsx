@@ -140,7 +140,6 @@ function ConstellationPortrait() {
           position: 'absolute', inset: 0,
           backgroundImage: 'linear-gradient(#c9a54e 1px, transparent 1px), linear-gradient(90deg, #c9a54e 1px, transparent 1px)',
           backgroundSize: '100px 100px',
-          backgroundAttachment: 'fixed',
           opacity: 0.3,
           zIndex: 1,
         }} />
