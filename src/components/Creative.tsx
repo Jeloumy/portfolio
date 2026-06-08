@@ -188,7 +188,7 @@ function CreativeCard({ item, color, CenterIcon, isVideo, delay, inView, exitY }
             className="absolute inset-0 block group/yt"
           >
             <img
-              src={`https://img.youtube.com/vi/${item.youtube}/${item.youtubeThumbnail ?? 'maxresdefault'}.jpg`}
+              src={`https://img.youtube.com/vi/${item.youtube}/maxresdefault.jpg`}
               alt={item.title}
               loading="lazy"
               decoding="async"

@@ -10,8 +10,7 @@ export interface CreativeItem {
   image?: string
   imageBack?: string   // recto/verso : verso de la carte
   thumbnailBg?: string // couleur de fond du haut de la card
-  youtube?: string           // ID de la vidéo YouTube (ex: "S0mrjPUIWYs")
-  youtubeThumbnail?: string  // frame à utiliser : '1','2','3' ou 'maxresdefault' (défaut)
+  youtube?: string     // ID de la vidéo YouTube (ex: "S0mrjPUIWYs")
 }
 
 export interface TabConfig {
@@ -124,7 +123,6 @@ export const VIDEOS: CreativeItem[] = [
     tags: ['Premiere Pro', 'Scénario', 'Réalisation'],
     badge: 'Webisode',
     youtube: 'S0mrjPUIWYs',
-    youtubeThumbnail: '2',
   },
   {
     title: 'PUB — Krenos',
@@ -132,7 +130,6 @@ export const VIDEOS: CreativeItem[] = [
     tags: ['Premiere Pro', 'After Effects', 'Publicité'],
     badge: 'Pub',
     youtube: 'fiUdxdoirTM',
-    youtubeThumbnail: '2',
   },
   {
     title: 'Court-métrage — Le Chien de Goya',
@@ -140,7 +137,6 @@ export const VIDEOS: CreativeItem[] = [
     tags: ['Premiere Pro', 'After Effects', 'Court-métrage'],
     badge: 'Court-métrage',
     youtube: 'LG_A0fGIGF8',
-    youtubeThumbnail: '2',
   },
 ]
 
