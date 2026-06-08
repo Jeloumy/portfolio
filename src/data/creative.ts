@@ -37,7 +37,7 @@ export const LOGO_META: Record<string, Partial<CreativeItem>> = {
     desc: 'Identité visuelle pour une boutique de spa en ligne, réalisée lors de mon stage de 3ème année BUT MMI chez Pass Piscines et Spas.',
     tags: ['Illustrator', 'Branding', 'Identité visuelle'],
     badge: 'Stage MMI',
-    thumbnailBg: '#f0e6d0',
+    thumbnailBg: '#f8efdc',
   },
   'cfa-academos': {
     title: 'CFA Academos',
@@ -51,21 +51,21 @@ export const LOGO_META: Record<string, Partial<CreativeItem>> = {
     desc: 'Identité visuelle complète pour une agence de développement web — logotype + icône, déclinaisons fond dégradé et fond neutre.',
     tags: ['Illustrator', 'Branding', 'Micro-entreprise'],
     badge: 'Freelance',
-    thumbnailBg: '#0b0c18',
+    thumbnailBg: 'linear-gradient(to top, #0c0c0c, #111425)',
   },
   'grimpp': {
     title: 'Grimpp',
     desc: "Logo pour une application d'apprentissage de la conduite, version complète, contractée et icône.",
     tags: ['Illustrator', 'App Branding'],
     badge: 'Freelance',
-    thumbnailBg: '#6264f0',
+    thumbnailBg: '#6666ff',
   },
   'kwickeat': {
     title: 'KwickEat',
     desc: "Identité visuelle pour une plateforme de commande en restauration, concurrent direct d'Obypay.",
     tags: ['Illustrator', 'Branding', 'SaaS'],
     badge: 'Freelance',
-    thumbnailBg: '#eeddd2',
+    thumbnailBg: '#eed8c8',
   },
   'lsa': {
     title: 'Littoral Sport Academy',
@@ -79,7 +79,7 @@ export const LOGO_META: Record<string, Partial<CreativeItem>> = {
     desc: 'Identité visuelle pour une agence immobilière — logotype et icône en déclinaisons couleur.',
     tags: ['Illustrator', 'Immobilier', 'Branding'],
     badge: 'Freelance',
-    thumbnailBg: '#0b3d1d',
+    thumbnailBg: '#032b1f',
   },
 }
 
