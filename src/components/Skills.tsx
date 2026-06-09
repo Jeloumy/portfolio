@@ -23,26 +23,24 @@ const SKILLS = [
   { branch: 0, label: 'Next.js',      x: 262, y: 335, r: 22, level: 75 },
   { branch: 0, label: 'Tailwind',     x: 62,  y: 460, r: 22, level: 90 },
   { branch: 0, label: 'HTML/CSS',     x: 162, y: 460, r: 22, level: 95 },
-  { branch: 0, label: 'Framer',       x: 262, y: 460, r: 22, level: 70 },
   // Backend
   { branch: 1, label: 'Node.js',      x: 387, y: 335, r: 22, level: 80 },
   { branch: 1, label: 'Express',      x: 487, y: 335, r: 22, level: 78 },
   { branch: 1, label: 'MySQL',        x: 587, y: 335, r: 22, level: 72 },
-  { branch: 1, label: 'MongoDB',      x: 387, y: 460, r: 22, level: 65 },
+  { branch: 1, label: 'SQLite',       x: 387, y: 460, r: 22, level: 70 },
   { branch: 1, label: 'REST API',     x: 487, y: 460, r: 22, level: 82 },
   { branch: 1, label: 'PHP',          x: 587, y: 460, r: 22, level: 60 },
   // Outils
   { branch: 2, label: 'Git/GitHub',   x: 712, y: 335, r: 22, level: 88 },
   { branch: 2, label: 'Figma',        x: 812, y: 335, r: 22, level: 85 },
   { branch: 2, label: 'VS Code',      x: 912, y: 335, r: 22, level: 92 },
-  { branch: 2, label: 'Vite',         x: 712, y: 460, r: 22, level: 82 },
-  { branch: 2, label: 'Vercel',       x: 812, y: 460, r: 22, level: 80 },
-  { branch: 2, label: 'Docker',       x: 912, y: 460, r: 22, level: 42 },
-  // Création
-  { branch: 3, label: 'After FX',     x: 1037, y: 335, r: 22, level: 78 },
+  { branch: 2, label: 'Docker',       x: 712, y: 460, r: 22, level: 55 },
+  { branch: 2, label: 'Sécu. Web',    x: 812, y: 460, r: 22, level: 55 },
+  { branch: 2, label: 'Réseaux',      x: 912, y: 460, r: 22, level: 50 },
+  // Création — Photoshop remonte en row 1 (remplace After FX)
+  { branch: 3, label: 'Photoshop',    x: 1037, y: 335, r: 22, level: 70 },
   { branch: 3, label: 'Premiere',     x: 1137, y: 335, r: 22, level: 82 },
   { branch: 3, label: 'Illustrator',  x: 1237, y: 335, r: 22, level: 75 },
-  { branch: 3, label: 'Photoshop',    x: 1037, y: 460, r: 22, level: 70 },
   { branch: 3, label: 'Branding',     x: 1137, y: 460, r: 22, level: 80 },
   { branch: 3, label: 'Montage',      x: 1237, y: 460, r: 22, level: 85 },
 ]
