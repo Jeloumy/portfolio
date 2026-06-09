@@ -144,7 +144,7 @@ body {
   background: #111122;
   border: 1px solid #1c1c35;
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -204,7 +204,7 @@ body {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
   position: relative;
   overflow: hidden;
   text-decoration: none;
@@ -230,7 +230,7 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   cursor: none;
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
   text-decoration: none;
 }
 .btn-arcane-solid:hover {
@@ -250,7 +250,7 @@ body {
   border: 1px solid #1c1c35;
   background: #0d0d1e;
   color: #a89880;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 .skill-tag:hover {
   border-color: #c9a54e66;

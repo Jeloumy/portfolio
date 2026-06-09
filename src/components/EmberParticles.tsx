@@ -8,7 +8,7 @@ interface Ember {
 }
 
 const COLORS = ['#c9a54e', '#e8c87a', '#7c3aed', '#a78bfa', '#f43f5e', '#c9a54e', '#c9a54e']
-const MAX_EMBERS = 40
+const MAX_EMBERS = 25
 
 export default function EmberParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -49,7 +49,7 @@ export default function EmberParticles() {
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      if (frame % 4 === 0) spawnEmber()
+      if (frame % 6 === 0) spawnEmber()
       frame++
 
       const live = embers.current
@@ -87,9 +87,20 @@ export default function EmberParticles() {
     }
 
     animRef.current = requestAnimationFrame(loop)
+
+    const onVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animRef.current)
+      } else {
+        animRef.current = requestAnimationFrame(loop)
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+
     return () => {
       cancelAnimationFrame(animRef.current)
       window.removeEventListener('resize', resize)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 

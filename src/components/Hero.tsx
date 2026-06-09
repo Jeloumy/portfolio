@@ -293,12 +293,29 @@ export default function Hero() {
   const bgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let rafId = 0
+    const target = { x: 0, y: 0 }
+    let scheduled = false
+
     const move = (e: MouseEvent) => {
-      if (!bgRef.current) return
-      bgRef.current.style.transform = `translate(${(e.clientX / window.innerWidth - 0.5) * 24}px, ${(e.clientY / window.innerHeight - 0.5) * 24}px)`
+      target.x = (e.clientX / window.innerWidth - 0.5) * 24
+      target.y = (e.clientY / window.innerHeight - 0.5) * 24
+      if (!scheduled) {
+        scheduled = true
+        rafId = requestAnimationFrame(() => {
+          if (bgRef.current) {
+            bgRef.current.style.transform = `translate(${target.x}px, ${target.y}px)`
+          }
+          scheduled = false
+        })
+      }
     }
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
+
+    window.addEventListener('mousemove', move, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', move)
+      cancelAnimationFrame(rafId)
+    }
   }, [])
 
   return (

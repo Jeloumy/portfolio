@@ -32,29 +32,23 @@ export default function CustomCursor() {
     }
     animRef.current = requestAnimationFrame(animate)
 
-    const onEnter = () => setHovering(true)
-    const onLeave = () => setHovering(false)
+    const onMouseOver = (e: MouseEvent) => {
+      if ((e.target as Element).closest('a, button, [data-hover]')) setHovering(true)
+    }
+    const onMouseOut = (e: MouseEvent) => {
+      const rel = e.relatedTarget as Element | null
+      if (!rel?.closest('a, button, [data-hover]')) setHovering(false)
+    }
 
     document.addEventListener('mousemove', move, { passive: true })
-    document.querySelectorAll('a, button, [data-hover]').forEach(el => {
-      el.addEventListener('mouseenter', onEnter)
-      el.addEventListener('mouseleave', onLeave)
-    })
-
-    const obs = new MutationObserver(() => {
-      document.querySelectorAll('a, button, [data-hover]').forEach(el => {
-        el.removeEventListener('mouseenter', onEnter)
-        el.removeEventListener('mouseleave', onLeave)
-        el.addEventListener('mouseenter', onEnter)
-        el.addEventListener('mouseleave', onLeave)
-      })
-    })
-    obs.observe(document.body, { childList: true, subtree: true })
+    document.addEventListener('mouseover', onMouseOver, { passive: true })
+    document.addEventListener('mouseout', onMouseOut, { passive: true })
 
     return () => {
       document.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseover', onMouseOver)
+      document.removeEventListener('mouseout', onMouseOut)
       cancelAnimationFrame(animRef.current)
-      obs.disconnect()
     }
   }, [])
 

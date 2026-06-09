@@ -283,19 +283,19 @@ function JourneyMap({ inView, mapProgress }: { inView: boolean; mapProgress: Mot
 
 
       {/* ── Terrain: montagnes — dessin + flottement ── */}
-      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
+      <motion.g animate={inView ? { y: [0, -3, 0] } : { y: 0 }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
         <MountainRange color="#a78bfa"
           points="170,260 205,218 235,238 268,190 302,220 335,182 368,215 410,258"
           opacity={0.22} inView={inView} delay={0.3}
         />
       </motion.g>
-      <motion.g animate={{ y: [0, -4, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}>
+      <motion.g animate={inView ? { y: [0, -4, 0] } : { y: 0 }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}>
         <MountainRange color="#c9a54e"
           points="460,258 490,220 515,238 548,195 578,225 610,200 640,258"
           opacity={0.18} inView={inView} delay={0.6}
         />
       </motion.g>
-      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}>
+      <motion.g animate={inView ? { y: [0, -3, 0] } : { y: 0 }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}>
         <MountainRange color="#c9a54e"
           points="750,175 785,138 812,158 850,108 888,145 925,112 960,148 1000,168"
           opacity={0.2} inView={inView} delay={0.9}
@@ -473,22 +473,22 @@ function MobileJourneyPath({ inView, mapProgress, selectedIndex, onSelect }: {
 
 
       {/* Montagnes — même style que desktop */}
-      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
+      <motion.g animate={inView ? { y: [0, -3, 0] } : { y: 0 }} transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}>
         <MountainRange color="#a78bfa"
           points="10,220 42,178 68,196 102,152 136,186 165,165 192,220"
           opacity={0.2} inView={inView} delay={0.3} />
       </motion.g>
-      <motion.g animate={{ y: [0, -4, 0] }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}>
+      <motion.g animate={inView ? { y: [0, -4, 0] } : { y: 0 }} transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}>
         <MountainRange color="#c9a54e"
           points="218,420 250,375 278,395 312,348 345,382 375,362 398,420"
           opacity={0.16} inView={inView} delay={0.5} />
       </motion.g>
-      <motion.g animate={{ y: [0, -3, 0] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}>
+      <motion.g animate={inView ? { y: [0, -3, 0] } : { y: 0 }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}>
         <MountainRange color="#c9a54e"
           points="10,630 44,585 74,605 110,558 144,592 172,572 198,630"
           opacity={0.17} inView={inView} delay={0.7} />
       </motion.g>
-      <motion.g animate={{ y: [0, -5, 0] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}>
+      <motion.g animate={inView ? { y: [0, -5, 0] } : { y: 0 }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}>
         <MountainRange color="#f43f5e"
           points="220,800 252,754 282,774 315,726 348,762 378,744 398,800"
           opacity={0.14} inView={inView} delay={0.9} />
