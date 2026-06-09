@@ -18,13 +18,13 @@ const TRAITS = [
   {
     icon: Video,
     title: 'Créateur de Contenu',
-    desc: 'Réalisateur, monteur, scénariste. Je conçois des vidéos de bout en bout, du scénario au rendu final sous Premiere Pro et After Effects.',
+    desc: 'Je monte des vidéos — parfois en écrivant les scénarios moi-même. Du début à la fin sous Premiere Pro et After Effects.',
     color: '#f43f5e',
   },
   {
     icon: BookOpen,
     title: 'Curieux du Monde',
-    desc: "Jeux vidéo, romantasy, voyages en sac à dos, musique... J'ai besoin d'explorer des univers différents. Cette curiosité nourrit tout le reste, y compris ma façon d'aborder le code.",
+    desc: "Jeux vidéo, romantasy, voyages, musique — autant de façons de garder la curiosité en éveil. Et c'est cette même curiosité que j'essaie d'apporter dans le code.",
     color: '#34d399',
   },
 ]
@@ -145,9 +145,10 @@ export default function About() {
               <p className="text-[#a89880]" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', lineHeight: '2', marginBottom: '1.8rem' }}>
                 En dehors du code, je crée des{' '}
                 <span className="text-[#c9a54e]">logos et identités visuelles</span>{' '}
-                pour des entreprises et je monte des <span className="text-[#f43f5e]">vidéos</span>{' '}
-                en écrivant les scénarios. Ces disciplines nourrissent mon regard sur le développement —
-                quand je construis une interface, je pense autant à l'esthétique qu'à la technique.
+                pour des entreprises et je monte des <span className="text-[#f43f5e]">vidéos</span>,
+                parfois en écrivant les scénarios. Ces disciplines nourrissent mon regard sur le développement —
+                quand je construis une interface, je pense autant à l'esthétique qu'à la technique,
+                et à la propreté du code qui va avec.
               </p>
 
               <p className="text-[#a89880]" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', lineHeight: '2', marginBottom: '2.5rem' }}>
@@ -155,9 +156,8 @@ export default function About() {
                 <span className="text-[#34d399]">jeux vidéo</span>,
                 la <span className="text-[#a78bfa]">romantasy</span>,
                 les <span className="text-[#c9a54e]">voyages en sac à dos</span>...
-                Des univers en apparence très éloignés, mais qui ont tous un point commun —
-                ils demandent de s'impliquer, d'explorer, et d'aller jusqu'au bout.
-                C'est un peu ma façon d'être.
+                Des univers qui n'ont pas grand-chose en commun en apparence,
+                mais qui m'ont tous appris la même chose : s'investir dans ce qui nous intéresse vraiment.
               </p>
             </div>
 
