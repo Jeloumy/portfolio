@@ -110,13 +110,13 @@ export default function About() {
             une formation touche-à-tout qui m'a autant appris à coder qu'à créer des logos ou monter des vidéos.
             Aujourd'hui en <span className="text-[#c9a54e]">Mastère Dev Full-Stack</span> à Livecampus,
             j'approfondis ce qui me passionne vraiment : construire des applications, comprendre les architectures,
-            aller chercher ce qui se cache sous le capot.
+            aller chercher ce qui se cache derrière la première de couverture.
           </p>
 
           <p className="text-[#8a7a6a]" style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)', lineHeight: '2', marginTop: '1.5rem' }}>
             Ce qui me caractérise avant tout, c'est la <span className="text-[#a78bfa]">curiosité</span>.
             J'ai toujours eu envie de comprendre comment les choses fonctionnent — pas seulement en code, mais dans tous les domaines.
-            Je suis convaincu que c'est cette envie d'apprendre en permanence qui fait la différence sur la durée.
+            Mais au fond, c'est toujours vers le <span className="text-[#c9a54e]">code</span> que je reviens.
           </p>
 
           {/* Decorative bottom rule */}
@@ -161,21 +161,6 @@ export default function About() {
               </p>
             </div>
 
-            {/* Skill tags */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.5rem', marginBottom: '3rem' }}>
-              {['React', 'Node.js', 'TypeScript', 'Figma', 'After Effects', 'Premiere Pro', 'Illustrator', 'MongoDB'].map((tag, i) => (
-                <motion.span
-                  key={tag}
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.08 * i, duration: 0.8 }}
-                  className="skill-tag"
-                >
-                  {tag}
-                </motion.span>
-              ))}
-            </div>
           </motion.div>
 
           {/* Right — trait cards */}
