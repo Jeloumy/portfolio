@@ -116,7 +116,7 @@ export default function About() {
           <p className="text-[#8a7a6a]" style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)', lineHeight: '2', marginTop: '1.5rem' }}>
             Ce qui me caractérise avant tout, c'est la <span className="text-[#a78bfa]">curiosité</span>.
             J'ai toujours eu envie de comprendre comment les choses fonctionnent — pas seulement en code, mais dans tous les domaines.
-            Mais au fond, c'est toujours vers le <span className="text-[#c9a54e]">code</span> que je reviens.
+            Avec le <span className="text-[#c9a54e]">code</span>, ma curiosité ne trouve pas vraiment de dénouement.
           </p>
 
           {/* Decorative bottom rule */}
@@ -146,9 +146,9 @@ export default function About() {
                 En dehors du code, je crée des{' '}
                 <span className="text-[#c9a54e]">logos et identités visuelles</span>{' '}
                 pour des entreprises et je monte des <span className="text-[#f43f5e]">vidéos</span>,
-                parfois en écrivant les scénarios. Ces disciplines nourrissent mon regard sur le développement —
-                quand je construis une interface, je pense autant à l'esthétique qu'à la technique,
-                et à la propreté du code qui va avec.
+                parfois en écrivant les scénarios. Ça m'aide à ne pas oublier l'aspect visuel quand je code,
+                et à garder une certaine rigueur dans l'organisation — c'est aussi ce qui m'a conduit
+                à apprendre et utiliser des méthodes comme <span className="text-[#a78bfa]">Scrum</span> ou <span className="text-[#a78bfa]">Agile</span>.
               </p>
 
               <p className="text-[#a89880]" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', lineHeight: '2', marginBottom: '2.5rem' }}>
