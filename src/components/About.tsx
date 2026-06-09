@@ -24,7 +24,7 @@ const TRAITS = [
   {
     icon: BookOpen,
     title: 'Curieux du Monde',
-    desc: "La romantasy, la musique et les voyages en immersion — sac au dos, loin des sentiers tracés. Des expériences qui traversent les frontières et nourrissent une créativité ancrée dans le réel.",
+    desc: "Jeux vidéo, romantasy, voyages en sac à dos, musique... J'ai besoin d'explorer des univers différents. Cette curiosité nourrit tout le reste, y compris ma façon d'aborder le code.",
     color: '#34d399',
   },
 ]
@@ -105,19 +105,18 @@ export default function About() {
           </div>
 
           <p className="text-[#b8a898]" style={{ fontSize: 'clamp(1rem, 1.4vw, 1.2rem)', lineHeight: '2', letterSpacing: '0.02em' }}>
-            Je suis <span className="text-[#e8ddd0] font-semibold">Jérémy Duflot</span>, développeur full-stack en première année de Mastère à{' '}
-            <span className="text-[#c9a54e]">Livecampus</span>.
-            Mon parcours a commencé par trois ans de <span className="text-[#c9a54e]">BUT MMI</span>{' '}
-            — une formation pluridisciplinaire qui m'a appris à aborder le numérique dans toute sa globalité :
-            du design à l'intégration, de l'audiovisuel à la communication digitale.
+            Je m'appelle <span className="text-[#e8ddd0] font-semibold">Jérémy Duflot</span> et je veux devenir développeur web.
+            Tout a commencé avec trois ans de <span className="text-[#c9a54e]">BUT MMI</span> à Béziers —
+            une formation touche-à-tout qui m'a autant appris à coder qu'à créer des logos ou monter des vidéos.
+            Aujourd'hui en <span className="text-[#c9a54e]">Mastère Dev Full-Stack</span> à Livecampus,
+            j'approfondis ce qui me passionne vraiment : construire des applications, comprendre les architectures,
+            aller chercher ce qui se cache sous le capot.
           </p>
 
           <p className="text-[#8a7a6a]" style={{ fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)', lineHeight: '2', marginTop: '1.5rem' }}>
-            Aujourd'hui en alternance chez{' '}
-            <span className="text-[#a78bfa]">Littoral Sport Academy</span>
-            , je finalise cette première année et prépare le prochain contrat.
-            Passionné par les voyages en immersion — partir seul, sac au dos, à l'autre bout du monde —
-            j'applique cette même curiosité sans frontières à chaque projet que je construis.
+            Ce qui me caractérise avant tout, c'est la <span className="text-[#a78bfa]">curiosité</span>.
+            J'ai toujours eu envie de comprendre comment les choses fonctionnent — pas seulement en code, mais dans tous les domaines.
+            Je suis convaincu que c'est cette envie d'apprendre en permanence qui fait la différence sur la durée.
           </p>
 
           {/* Decorative bottom rule */}
@@ -147,14 +146,18 @@ export default function About() {
                 En dehors du code, je crée des{' '}
                 <span className="text-[#c9a54e]">logos et identités visuelles</span>{' '}
                 pour des entreprises et je monte des <span className="text-[#f43f5e]">vidéos</span>{' '}
-                en écrivant les scénarios. Ces disciplines nourrissent mon approche
-                du développement — chaque interface que je construis réfléchit à l'esthétique autant qu'à la technique.
+                en écrivant les scénarios. Ces disciplines nourrissent mon regard sur le développement —
+                quand je construis une interface, je pense autant à l'esthétique qu'à la technique.
               </p>
 
               <p className="text-[#a89880]" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', lineHeight: '2', marginBottom: '2.5rem' }}>
-                Je nourris ma créativité dans la musique et la{' '}
-                <span className="text-[#a78bfa]">romantasy</span>{' '}
-                — une façon de rester inspiré et de ne jamais séparer technique et univers.
+                Je suis passionné par plein de choses assez différentes : les{' '}
+                <span className="text-[#34d399]">jeux vidéo</span>,
+                la <span className="text-[#a78bfa]">romantasy</span>,
+                les <span className="text-[#c9a54e]">voyages en sac à dos</span>...
+                Des univers en apparence très éloignés, mais qui ont tous un point commun —
+                ils demandent de s'impliquer, d'explorer, et d'aller jusqu'au bout.
+                C'est un peu ma façon d'être.
               </p>
             </div>
 
