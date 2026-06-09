@@ -23,6 +23,7 @@ const SKILLS = [
   { branch: 0, label: 'Next.js',      x: 262, y: 335, r: 22, level: 75 },
   { branch: 0, label: 'Tailwind',     x: 62,  y: 460, r: 22, level: 90 },
   { branch: 0, label: 'HTML/CSS',     x: 162, y: 460, r: 22, level: 95 },
+  { branch: 0, label: 'Angular',      x: 262, y: 460, r: 22, level: 55 },
   // Backend
   { branch: 1, label: 'Node.js',      x: 387, y: 335, r: 22, level: 80 },
   { branch: 1, label: 'Express',      x: 487, y: 335, r: 22, level: 78 },
@@ -30,6 +31,8 @@ const SKILLS = [
   { branch: 1, label: 'SQLite',       x: 387, y: 460, r: 22, level: 70 },
   { branch: 1, label: 'REST API',     x: 487, y: 460, r: 22, level: 82 },
   { branch: 1, label: 'PHP',          x: 587, y: 460, r: 22, level: 60 },
+  { branch: 1, label: 'Laravel',      x: 387, y: 570, r: 22, level: 62 },
+  { branch: 1, label: 'WordPress',    x: 487, y: 570, r: 22, level: 72 },
   // Outils
   { branch: 2, label: 'Git/GitHub',   x: 712, y: 335, r: 22, level: 88 },
   { branch: 2, label: 'Figma',        x: 812, y: 335, r: 22, level: 85 },
@@ -37,7 +40,7 @@ const SKILLS = [
   { branch: 2, label: 'Docker',       x: 712, y: 460, r: 22, level: 55 },
   { branch: 2, label: 'Sécu. Web',    x: 812, y: 460, r: 22, level: 55 },
   { branch: 2, label: 'Réseaux',      x: 912, y: 460, r: 22, level: 50 },
-  // Création — Photoshop remonte en row 1 (remplace After FX)
+  // Création
   { branch: 3, label: 'Photoshop',    x: 1037, y: 335, r: 22, level: 70 },
   { branch: 3, label: 'Premiere',     x: 1137, y: 335, r: 22, level: 82 },
   { branch: 3, label: 'Illustrator',  x: 1237, y: 335, r: 22, level: 75 },
@@ -121,11 +124,18 @@ function TreeLines({ inView }: { inView: boolean }) {
     if (s.y === 335) {
       lineData.push({ x1: b.x, y1: b.y + b.r, x2: s.x, y2: s.y - s.r, color: b.color, delay: 0.5 + i * 0.05 })
     }
-    // Upper row → lower row (same branch+column)
+    // Row 1 → Row 2 (same branch+column)
     if (s.y === 460) {
       const upper = SKILLS.find(u => u.branch === s.branch && u.y === 335 && u.x === s.x)
       if (upper) {
         lineData.push({ x1: upper.x, y1: upper.y + upper.r, x2: s.x, y2: s.y - s.r, color: b.color, delay: 0.7 + i * 0.04 })
+      }
+    }
+    // Row 2 → Row 3 (same branch+column)
+    if (s.y === 570) {
+      const mid = SKILLS.find(u => u.branch === s.branch && u.y === 460 && u.x === s.x)
+      if (mid) {
+        lineData.push({ x1: mid.x, y1: mid.y + mid.r, x2: s.x, y2: s.y - s.r, color: b.color, delay: 0.9 + i * 0.04 })
       }
     }
   })
@@ -255,7 +265,7 @@ export default function Skills() {
         >
           <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <svg
-            viewBox="0 0 1300 600"
+            viewBox="0 0 1300 660"
             preserveAspectRatio="xMidYMid meet"
             style={{ width: '100%', minWidth: '600px', height: 'auto' }}
           >
