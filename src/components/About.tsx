@@ -155,6 +155,7 @@ export default function About() {
                 Je suis passionné par plein de choses assez différentes : les{' '}
                 <span className="text-[#34d399]">jeux vidéo</span>,
                 la <span className="text-[#a78bfa]">romantasy</span>,
+                la <span className="text-[#f43f5e]">musique</span>,
                 les <span className="text-[#c9a54e]">voyages en sac à dos</span>...
                 Des univers qui n'ont pas grand-chose en commun en apparence,
                 mais qui m'ont tous appris la même chose : s'investir dans ce qui nous intéresse vraiment.
