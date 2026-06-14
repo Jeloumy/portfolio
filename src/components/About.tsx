@@ -24,7 +24,7 @@ const TRAITS = [
   {
     icon: BookOpen,
     title: 'Curieux du Monde',
-    desc: "Jeux vidéo, romantasy, voyages, musique — autant de façons de garder la curiosité en éveil. Et c'est cette même curiosité que j'essaie d'apporter dans le code.",
+    desc: "Jeux vidéo, fantasy, voyages, musique — autant de façons de garder la curiosité en éveil. Et c'est cette même curiosité que j'essaie d'apporter dans le code.",
     color: '#34d399',
   },
 ]
@@ -154,7 +154,7 @@ export default function About() {
               <p className="text-[#a89880]" style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1rem)', lineHeight: '2', marginBottom: '2.5rem' }}>
                 Je suis passionné par plein de choses assez différentes : les{' '}
                 <span className="text-[#34d399]">jeux vidéo</span>,
-                la <span className="text-[#a78bfa]">romantasy</span>,
+                la <span className="text-[#a78bfa]">fantasy</span>,
                 la <span className="text-[#f43f5e]">musique</span>,
                 les <span className="text-[#c9a54e]">voyages en sac à dos</span>...
                 Des univers qui n'ont pas grand-chose en commun en apparence,
